@@ -1,3 +1,5 @@
+import os
+
 import sublime
 import sublime_plugin
 
@@ -13,3 +15,4 @@ class CondaCommand(sublime_plugin.WindowCommand):
 
     def find_conda_environments(self):
         """Find all conda environments in the specified directory."""
+        return [environment for environment in os.listdir(self.environments)]
