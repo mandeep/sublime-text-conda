@@ -1,0 +1,3 @@
+[
+    { "caption": "Conda: Activate", "command": "activate_conda_environment" },
+]
