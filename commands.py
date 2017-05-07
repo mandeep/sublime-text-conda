@@ -4,17 +4,21 @@ import sublime
 import sublime_plugin
 
 
+SETTINGS = sublime.load_settings('conda.sublime-settings')
+
+
 class CondaCommand(sublime_plugin.WindowCommand):
     """Contains all of the methods that will be inherited by other commands."""
 
-    def __init__(self):
-        """Initialize values from the settings file."""
-        self.settings = sublime.load_settings('conda.sublime-settings')
-        self.executable = self.settings.get('executable')
-        self.environments = self.settings.get('environment_directory')
-        self.activate = self.settings.get('activate')
-        self.deactivate = self.settings.get('deactivate')
-
     def find_conda_environments(self):
         """Find all conda environments in the specified directory."""
-        return [environment for environment in os.listdir(self.environments)]
+        directory = os.path.expanduser(SETTINGS.get('environment_directory'))
+        return [environment for environment in os.listdir(directory)]
+
+
+class ActivateCondaEnvironmentCommand(CondaCommand):
+    """Contains the methods needed to activate a conda environment."""
+
+    def run(self):
+        """Display 'Conda: Activate' in Sublime Text's command palette."""
+        self.window.show_quick_panel(self.find_conda_environments(), "")
