@@ -8,5 +8,13 @@
 
     // Directory in which the conda envs are stored
     // Default location is the user's home directory
-    "environment_directory": "~/anaconda3/envs/" 
+    "environment_directory": "~/anaconda3/envs/",
+
+    // On Linux conda environments are activated using source activate
+    // The value can be changed to 'activate' if on Windows
+    "activate": "source activate",
+
+    // On Linux conda environments are deactivated using source deactivate
+    // The value can be changed to 'deactivate' if on Windows
+    "deactivate": "source deactivate"
 }
