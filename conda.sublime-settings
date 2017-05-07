@@ -1,0 +1,15 @@
+
+// Default settings for sublime-text-conda:
+{
+    // Use python as the default executable
+    "executable": "python",
+
+    // 'conda' assumes conda is installed on PATH
+    // The value can be changed to the location of the conda bin
+    // if conda is not on PATH
+    "conda": "conda",
+
+    // Directory in which the conda envs are stored
+    // Default location is the user's home directory
+    "environment_directory": "~/anaconda3/envs/" 
+}
