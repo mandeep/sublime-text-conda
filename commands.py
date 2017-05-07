@@ -12,6 +12,8 @@ class CondaCommand(sublime_plugin.WindowCommand):
         self.settings = sublime.load_settings('conda.sublime-settings')
         self.executable = self.settings.get('executable')
         self.environments = self.settings.get('environment_directory')
+        self.activate = self.settings.get('activate')
+        self.deactivate = self.settings.get('deactivate')
 
     def find_conda_environments(self):
         """Find all conda environments in the specified directory."""
