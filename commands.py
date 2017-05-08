@@ -20,5 +20,10 @@ class ActivateCondaEnvironmentCommand(CondaCommand):
     """Contains the methods needed to activate a conda environment."""
 
     def run(self):
-        """Display 'Conda: Activate' in Sublime Text's command palette."""
+        """Display 'Conda: Activate' in Sublime Text's command palette.
+
+        When 'Conda: Activate' is clicked by the user, the command
+        palette will show all available conda environments.
+        """
+
         self.window.show_quick_panel(self.find_conda_environments(), "")
