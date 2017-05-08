@@ -1,0 +1,7 @@
+{
+    // cmd assumes Anaconda python executable is on PATH
+    // value can be changed to exact path of python bin if needed
+    "cmd": ["python", "-u", "$file"],
+    "file_regex": "^[ ]*File \"(...*?)\", line ([0-9]*)",
+    "selector": "source.python"
+}
