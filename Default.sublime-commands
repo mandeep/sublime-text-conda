@@ -1,3 +1,6 @@
 [
+    { "caption": "Conda: New", "command": "new_conda_environment" },
     { "caption": "Conda: Activate", "command": "activate_conda_environment" },
+    { "caption": "Conda: Deactivate", "command": "deactivate_conda_environment" },
+    { "caption": "Conda: Remove", "command": "remove_conda_environment" },
 ]
