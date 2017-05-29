@@ -5,7 +5,7 @@ import sublime_plugin
 
 
 class CondaCommand(sublime_plugin.WindowCommand):
-    """Contains all of the methods that will be inherited by other commands."""
+    """Contains all of the attributes that will be inherited by other commands."""
 
     @property
     def settings(self):
@@ -55,12 +55,34 @@ class CreateCondaEnvironmentCommand(CondaCommand):
         method.
         """
         self.window.show_input_panel('Conda Environment Name:', '',
-                                     self.create_environment, None, None)
+                                     self.retrieve_python_version, None, None)
 
-    def create_environment(self, environment):
+    def retrieve_python_version(self, environment):
+        """Display a list of available Python versions for the environment.
+
+        Forcing the user to select the Python version allows conda to create
+        a new Python executable inside the environment directory.
+        """
+        self.environment = environment
+
+        python_versions = ['Python 2.7', 'Python 3.5', 'Python 3.6']
+
+        self.window.show_quick_panel(python_versions, self.create_environment)
+
+    def create_environment(self, index):
         """Create a conda environment in the envs directory."""
-        cmd = [self.executable, '-m', 'conda', 'create', '--name', environment, '-y']
-        self.window.run_command('exec', {'cmd': cmd})
+        if index != -1:
+            if index == 0:
+                python_version = 'python=2.7'
+            elif index == 1:
+                python_version = 'python=3.5'
+            else:
+                python_version = 'python=3.6'
+
+            cmd = [self.executable, '-m', 'conda', 'create',
+                   '--name', self.environment, python_version, '-y']
+
+            self.window.run_command('exec', {'cmd': cmd})
 
 
 class RemoveCondaEnvironmentCommand(CondaCommand):
@@ -81,7 +103,10 @@ class RemoveCondaEnvironmentCommand(CondaCommand):
         """Remove a conda environment from the envs directory."""
         if index != -1:
             environment = self.find_conda_environments[index][0]
-            cmd = [self.executable, '-m', 'conda', 'remove', '--name', environment, '--all', '-y']
+
+            cmd = [self.executable, '-m', 'conda', 'remove',
+                   '--name', environment, '--all', '-y']
+
             self.window.run_command('exec', {'cmd': cmd})
 
 
@@ -112,7 +137,7 @@ class DeactivateCondaEnvironmentCommand(CondaCommand):
         palette will show all available conda environments. The
         clicked environment will be deactivated.
         """
-        self.window.show_quick_panel(self.find_conda_environments, 
+        self.window.show_quick_panel(self.find_conda_environments,
                                      self.deactivate_environment)
 
     def deactivate_environment(self, index):
