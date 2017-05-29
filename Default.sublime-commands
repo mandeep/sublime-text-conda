@@ -1,4 +1,5 @@
 [
+    { "caption": "Conda: List", "command": "list_conda_environment" },
     { "caption": "Conda: Create", "command": "create_conda_environment" },
     { "caption": "Conda: Activate", "command": "activate_conda_environment" },
     { "caption": "Conda: Deactivate", "command": "deactivate_conda_environment" },

@@ -11,13 +11,27 @@ class CondaCommand(sublime_plugin.WindowCommand):
     def find_conda_environments(self):
         """Find all conda environments in the specified directory."""
         directory = os.path.expanduser(self.settings.get('environment_directory'))
-        return [[environment, os.path.join(directory, environment)]
-                for environment in os.listdir(directory)]
+
+        environments = [[environment, os.path.join(directory, environment)]
+                        for environment in os.listdir(directory)]
+
+        if len(environments) > 0:
+            return environments
+        else:
+            return ['No Conda Environments Found']
 
     @property
     def settings(self):
         """Load the plugin settings for commands to use."""
         return sublime.load_settings('conda.sublime-settings')
+
+
+class ListCondaEnvironmentCommand(CondaCommand):
+    """Contains all of the methods needed to display all conda environments."""
+
+    def run(self):
+        """"""
+        self.window.show_quick_panel(self.find_conda_environments, None)
 
 
 class ActivateCondaEnvironmentCommand(CondaCommand):
