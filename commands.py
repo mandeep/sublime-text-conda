@@ -27,9 +27,9 @@ class ActivateCondaEnvironmentCommand(CondaCommand):
         palette will show all available conda environments.
         """
         try:
-            self.window.show_quick_panel(self.find_conda_environments(), "")
+            self.window.show_quick_panel(self.find_conda_environments(), '')
         except AttributeError:
-            sublime.status_message("No conda environments found.")
+            sublime.status_message('No conda environments found.')
 
 
 class CreateCondaEnvironmentCommand(CondaCommand):
@@ -43,8 +43,11 @@ class CreateCondaEnvironmentCommand(CondaCommand):
         This environment name is then passed to the create_environment
         method.
         """
-        self.window.show_input_panel('Conda Environment Name:', '',
-                                     self.create_environment, None, None)
+        try:
+            self.window.show_input_panel('Conda Environment Name:', '',
+                                         self.create_environment, None, None)
+        except AttributeError:
+            sublime.status_message('Python executable not found.')
 
     def create_environment(self, environment):
         """Create a conda environment in the envs directory."""
@@ -68,7 +71,7 @@ class RemoveCondaEnvironmentCommand(CondaCommand):
             self.window.show_quick_panel(self.find_conda_environments(),
                                          self.remove_environment)
         except AttributeError:
-            sublime.status_message("No conda environments found.")
+            sublime.status_message('No conda environments found.')
 
     def remove_environment(self, index):
         """Remove a conda environment from the envs directory."""

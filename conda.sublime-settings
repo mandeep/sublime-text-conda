@@ -3,7 +3,7 @@
 {
     // executable is the path to anaconda's python
     // this python executable is used in order to find conda
-    "executable": "~/anaconda3/bin/python3",
+    "executable": "~/anaconda3/bin/python3.6",
 
     // Directory in which the conda envs are stored
     // Default location is the user's home directory
