@@ -8,6 +8,16 @@ class CondaCommand(sublime_plugin.WindowCommand):
     """Contains all of the methods that will be inherited by other commands."""
 
     @property
+    def settings(self):
+        """Load the plugin settings for commands to use."""
+        return sublime.load_settings('conda.sublime-settings')
+
+    @property
+    def executable(self):
+        """Retrieve the python executable path from settings."""
+        return os.path.expanduser(self.settings.get('executable'))
+
+    @property
     def find_conda_environments(self):
         """Find all conda environments in the specified directory."""
         directory = os.path.expanduser(self.settings.get('environment_directory'))
@@ -19,11 +29,6 @@ class CondaCommand(sublime_plugin.WindowCommand):
             return environments
         else:
             return ['No Conda Environments Found']
-
-    @property
-    def settings(self):
-        """Load the plugin settings for commands to use."""
-        return sublime.load_settings('conda.sublime-settings')
 
 
 class ListCondaEnvironmentCommand(CondaCommand):
@@ -67,8 +72,7 @@ class CreateCondaEnvironmentCommand(CondaCommand):
 
     def create_environment(self, environment):
         """Create a conda environment in the envs directory."""
-        python = os.path.expanduser(self.settings.get('executable'))
-        cmd = [python, '-m', 'conda', 'create', '--name', environment, '-y']
+        cmd = [self.executable, '-m', 'conda', 'create', '--name', environment, '-y']
         self.window.run_command('exec', {'cmd': cmd})
 
 
@@ -89,7 +93,6 @@ class RemoveCondaEnvironmentCommand(CondaCommand):
     def remove_environment(self, index):
         """Remove a conda environment from the envs directory."""
         if index != -1:
-            python = os.path.expanduser(self.settings.get('executable'))
             environment = self.find_conda_environments[index][0]
-            cmd = [python, '-m', 'conda', 'remove', '--name', environment, '--all', '-y']
+            cmd = [self.executable, '-m', 'conda', 'remove', '--name', environment, '--all', '-y']
             self.window.run_command('exec', {'cmd': cmd})
