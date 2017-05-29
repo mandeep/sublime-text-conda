@@ -30,7 +30,11 @@ class ListCondaEnvironmentCommand(CondaCommand):
     """Contains all of the methods needed to display all conda environments."""
 
     def run(self):
-        """"""
+        """Display 'Conda: List' in Sublime Text's command palette.
+
+        When 'Conda: List' is clicked by the user, the command
+        palette will show all available conda environments.
+        """
         self.window.show_quick_panel(self.find_conda_environments, None)
 
 
@@ -41,7 +45,8 @@ class ActivateCondaEnvironmentCommand(CondaCommand):
         """Display 'Conda: Activate' in Sublime Text's command palette.
 
         When 'Conda: Activate' is clicked by the user, the command
-        palette will show all available conda environments.
+        palette will show all available conda environments. The
+        clicked environment will be activated as the current environment.
         """
         self.window.show_quick_panel(self.find_conda_environments, '')
 
