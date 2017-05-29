@@ -43,19 +43,6 @@ class ListCondaEnvironmentCommand(CondaCommand):
         self.window.show_quick_panel(self.find_conda_environments, None)
 
 
-class ActivateCondaEnvironmentCommand(CondaCommand):
-    """Contains the methods needed to activate a conda environment."""
-
-    def run(self):
-        """Display 'Conda: Activate' in Sublime Text's command palette.
-
-        When 'Conda: Activate' is clicked by the user, the command
-        palette will show all available conda environments. The
-        clicked environment will be activated as the current environment.
-        """
-        self.window.show_quick_panel(self.find_conda_environments, '')
-
-
 class CreateCondaEnvironmentCommand(CondaCommand):
     """Contains the methods needed to create a conda environment."""
 
@@ -96,3 +83,37 @@ class RemoveCondaEnvironmentCommand(CondaCommand):
             environment = self.find_conda_environments[index][0]
             cmd = [self.executable, '-m', 'conda', 'remove', '--name', environment, '--all', '-y']
             self.window.run_command('exec', {'cmd': cmd})
+
+
+class ActivateCondaEnvironmentCommand(CondaCommand):
+    """Contains the methods needed to activate a conda environment."""
+
+    def run(self):
+        """Display 'Conda: Activate' in Sublime Text's command palette.
+
+        When 'Conda: Activate' is clicked by the user, the command
+        palette will show all available conda environments. The
+        clicked environment will be activated as the current environment.
+        """
+        self.window.show_quick_panel(self.find_conda_environments,
+                                     self.activate_environment)
+
+    def activate_environment(self, index):
+        """Activate the environment selected from the command palette."""
+
+
+class DeactivateCondaEnvironmentCommand(CondaCommand):
+    """Contains the methods needed to deactivate a conda environment."""
+
+    def run(self):
+        """Display 'Conda: Deactivate' in Sublime Text's command palette.
+
+        When 'Conda: Deactivate' is clicked by the user, the command
+        palette will show all available conda environments. The
+        clicked environment will be deactivated.
+        """
+        self.window.show_quick_panel(self.find_conda_environments, 
+                                     self.deactivate_environment)
+
+    def deactivate_environment(self, index):
+        """Deactivate the environment selected in the command palette."""
