@@ -97,7 +97,7 @@ class CreateCondaEnvironmentCommand(CondaCommand):
                 python_version = 'python=3.6'
 
             cmd = [self.executable, '-m', 'conda', 'create',
-                   '--name', self.environment, python_version, '-y']
+                   '--name', self.environment, python_version, '-y', '-q']
 
             self.window.run_command('exec', {'cmd': cmd})
 
@@ -122,7 +122,7 @@ class RemoveCondaEnvironmentCommand(CondaCommand):
             environment = self.conda_environments[index][0]
 
             cmd = [self.executable, '-m', 'conda', 'remove',
-                   '--name', environment, '--all', '-y']
+                   '--name', environment, '--all', '-y', '-q']
 
             self.window.run_command('exec', {'cmd': cmd})
 
@@ -187,6 +187,48 @@ class DeactivateCondaEnvironmentCommand(CondaCommand):
             sublime.status_message('No active conda environment')
 
         self.window.set_project_data(project_data)
+
+
+class InstallCondaPackageCommand(CondaCommand):
+    """Install a Python package via conda."""
+
+    def run(self):
+        """Display an input box allowing the user to input a package name."""
+        self.window.show_input_panel('Package Name:', '', self.install_package,
+                                     None, None)
+
+    def install_package(self, package):
+        """Install the given package name via conda."""
+        try:
+            environment_path = self.window.project_data()['conda_environment']
+            environment = os.path.basename(environment_path)
+            cmd = [self.executable, '-m', 'conda', 'install', package,
+                   '--name', environment, '-y', '-q']
+        except KeyError:
+            pass
+
+        self.window.run_command('exec', {'cmd': cmd})
+
+
+class RemoveCondaPackageCommand(CondaCommand):
+    """Remove a Python package via conda."""
+
+    def run(self):
+        """Display an input box allowing the user to input a package name."""
+        self.window.show_input_panel('Package Name:', '', self.remove_package,
+                                     None, None)
+
+    def remove_package(self, package):
+        """Remove the given package name via conda."""
+        try:
+            environment_path = self.window.project_data()['conda_environment']
+            environment = os.path.basename(environment_path)
+            cmd = [self.executable, '-m', 'conda', 'remove', package,
+                   '--name', environment, '-y', '-q']
+        except KeyError:
+            pass
+
+        self.window.run_command('exec', {'cmd': cmd})
 
 
 class ExecuteCondaEnvironmentCommand(Default.exec.ExecCommand):

@@ -1,7 +1,9 @@
 [
-    { "caption": "Conda: List", "command": "list_conda_environment" },
     { "caption": "Conda: Create", "command": "create_conda_environment" },
+    { "caption": "Conda: Remove", "command": "remove_conda_environment" },
     { "caption": "Conda: Activate", "command": "activate_conda_environment" },
     { "caption": "Conda: Deactivate", "command": "deactivate_conda_environment" },
-    { "caption": "Conda: Remove", "command": "remove_conda_environment" },
+    { "caption": "Conda: List", "command": "list_conda_environment" },
+    { "caption": "Conda: Install Package", "command": "install_conda_package" },
+    { "caption": "Conda: Remove Package", "command": "remove_conda_package" },
 ]
