@@ -1,4 +1,5 @@
 import os
+import sys
 
 import sublime
 import sublime_plugin
@@ -186,7 +187,13 @@ class ExecuteCondaEnvironmentCommand(Default.exec.ExecCommand):
         """
         try:
             environment = self.window.project_data()['conda_environment']
-            kwargs['cmd'][0] = os.path.normpath('{}/bin/python' .format(environment))
+            
+            if sys.platform.startswith('win'):
+                executable_path = '{}\\python' .format(environment)
+            else:
+                executable_path = '{}/bin/python' .format(environment)
+
+            kwargs['cmd'][0] = os.path.normpath(executable_path)
         except KeyError:
             pass
 
