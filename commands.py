@@ -188,7 +188,7 @@ class ExecuteCondaEnvironmentCommand(Default.exec.ExecCommand):
         try:
             environment = self.window.project_data()['conda_environment']
             
-            if sys.platform.startswith('win'):
+            if sys.platform == 'win32':
                 executable_path = '{}\\python' .format(environment)
             else:
                 executable_path = '{}/bin/python' .format(environment)
