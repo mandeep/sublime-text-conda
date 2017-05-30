@@ -180,6 +180,6 @@ class ExecuteCondaEnvironmentCommand(Default.exec.ExecCommand, CondaCommand):
             environment = self.window.project_data()['conda_environment']
             kwargs['cmd'][0] = os.path.normpath('{}/bin/python' .format(environment))
         except KeyError:
-            environment = self.window.project_data()
+            pass
 
         super(ExecuteCondaEnvironmentCommand, self).run(**kwargs)
