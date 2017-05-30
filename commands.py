@@ -3,6 +3,8 @@ import os
 import sublime
 import sublime_plugin
 
+import Default
+
 
 class CondaCommand(sublime_plugin.WindowCommand):
     """Contains all of the attributes that will be inherited by other commands."""
@@ -125,6 +127,15 @@ class ActivateCondaEnvironmentCommand(CondaCommand):
 
     def activate_environment(self, index):
         """Activate the environment selected from the command palette."""
+        if index != -1:
+            project_data = self.window.project_data()
+
+            project_data['conda_environment'] = self.find_conda_environments[index][1]
+
+            self.window.set_project_data(project_data)
+
+            sublime.status_message('Activated conda environment: {}'
+                                   .format(self.find_conda_environments[index][0]))
 
 
 class DeactivateCondaEnvironmentCommand(CondaCommand):
@@ -142,3 +153,33 @@ class DeactivateCondaEnvironmentCommand(CondaCommand):
 
     def deactivate_environment(self, index):
         """Deactivate the environment selected in the command palette."""
+        sublime.status_message('Deactivated conda environment: {}'
+                               .format(self.find_conda_environments[index][0]))
+
+        project_data = self.window.project_data()
+
+        try:
+            del project_data['conda_environment']
+        except KeyError:
+            sublime.status_message('No active conda environment')
+
+        self.window.set_project_data(project_data)
+
+
+class ExecuteCondaEnvironmentCommand(Default.exec.ExecCommand, CondaCommand):
+    """Override Sublime Text's default ExecCommand with a targeted build."""
+
+    def run(self, **kwargs):
+        """Run the current Python file with the conda environment's Python executable.
+
+        The activated conda environment is retrieved from the Sublime Text
+        window project data. The Python executable found in the conda
+        environment's bin directory is used to build the file.
+        """
+        try:
+            environment = self.window.project_data()['conda_environment']
+            kwargs['cmd'][0] = os.path.normpath('{}/bin/python' .format(environment))
+        except KeyError:
+            environment = self.window.project_data()
+
+        super(ExecuteCondaEnvironmentCommand, self).run(**kwargs)

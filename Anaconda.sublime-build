@@ -1,6 +1,6 @@
 {
-    // cmd assumes Anaconda python executable is on PATH
-    // value can be changed to exact path of python bin if needed
+    // target uses the ExecuteCondaEnvironmentCommand found in commands.py
+    "target": "execute_conda_environment",
     "cmd": ["python", "-u", "$file"],
     "file_regex": "^[ ]*File \"(...*?)\", line ([0-9]*)",
     "selector": "source.python"
