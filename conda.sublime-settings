@@ -3,11 +3,11 @@
 {
     // executable is the path to anaconda's python
     // this python executable is used in order to find conda
-    // on Windows the path is typically ~/Anaconda3/python
-    "executable": "~/anaconda3/bin/python3",
+    // on Windows the path is typically '~\\Anaconda3\\python'
+    "executable": "~anaconda3/bin/python3",
 
     // Directory in which the conda envs are stored
     // Default location is the user's home directory
-    // Windows users may need to capitalize the a in anaconda3
+    // Windows users may need to capitalize the first 'a' in anaconda3
     "environment_directory": "~/anaconda3/envs/",
 }
