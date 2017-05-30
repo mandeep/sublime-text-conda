@@ -20,7 +20,7 @@ class CondaCommand(sublime_plugin.WindowCommand):
         return os.path.expanduser(self.settings.get('executable'))
 
     @property
-    def find_conda_environments(self):
+    def conda_environments(self):
         """Find all conda environments in the specified directory."""
         directory = os.path.expanduser(self.settings.get('environment_directory'))
 
@@ -42,7 +42,7 @@ class ListCondaEnvironmentCommand(CondaCommand):
         When 'Conda: List' is clicked by the user, the command
         palette will show all available conda environments.
         """
-        self.window.show_quick_panel(self.find_conda_environments, None)
+        self.window.show_quick_panel(self.conda_environments, None)
 
 
 class CreateCondaEnvironmentCommand(CondaCommand):
@@ -98,13 +98,13 @@ class RemoveCondaEnvironmentCommand(CondaCommand):
         The index of the selected environment is then passed to the
         remove_environment method"
         """
-        self.window.show_quick_panel(self.find_conda_environments,
+        self.window.show_quick_panel(self.conda_environments,
                                      self.remove_environment)
 
     def remove_environment(self, index):
         """Remove a conda environment from the envs directory."""
         if index != -1:
-            environment = self.find_conda_environments[index][0]
+            environment = self.conda_environments[index][0]
 
             cmd = [self.executable, '-m', 'conda', 'remove',
                    '--name', environment, '--all', '-y']
@@ -122,7 +122,7 @@ class ActivateCondaEnvironmentCommand(CondaCommand):
         palette will show all available conda environments. The
         clicked environment will be activated as the current environment.
         """
-        self.window.show_quick_panel(self.find_conda_environments,
+        self.window.show_quick_panel(self.conda_environments,
                                      self.activate_environment)
 
     def activate_environment(self, index):
@@ -130,12 +130,12 @@ class ActivateCondaEnvironmentCommand(CondaCommand):
         if index != -1:
             project_data = self.window.project_data()
 
-            project_data['conda_environment'] = self.find_conda_environments[index][1]
+            project_data['conda_environment'] = self.conda_environments[index][1]
 
             self.window.set_project_data(project_data)
 
             sublime.status_message('Activated conda environment: {}'
-                                   .format(self.find_conda_environments[index][0]))
+                                   .format(self.conda_environments[index][0]))
 
 
 class DeactivateCondaEnvironmentCommand(CondaCommand):
@@ -148,13 +148,21 @@ class DeactivateCondaEnvironmentCommand(CondaCommand):
         palette will show all available conda environments. The
         clicked environment will be deactivated.
         """
-        self.window.show_quick_panel(self.find_conda_environments,
+        self.window.show_quick_panel(self.active_environment,
                                      self.deactivate_environment)
+
+    @property
+    def active_environment(self):
+        try:
+            environment = self.window.project_data()['conda_environment']
+            return [[os.path.basename(environment), os.path.dirname(environment)]]
+        except KeyError:
+            return ['No Active Conda Environment']
 
     def deactivate_environment(self, index):
         """Deactivate the environment selected in the command palette."""
         sublime.status_message('Deactivated conda environment: {}'
-                               .format(self.find_conda_environments[index][0]))
+                               .format(self.conda_environments[index][0]))
 
         project_data = self.window.project_data()
 
