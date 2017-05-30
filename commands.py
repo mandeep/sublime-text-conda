@@ -35,15 +35,29 @@ class CondaCommand(sublime_plugin.WindowCommand):
 
 
 class ListCondaEnvironmentCommand(CondaCommand):
-    """Contains all of the methods needed to display all conda environments."""
+    """Contains all of the methods needed to list all installed packages."""
 
     def run(self):
         """Display 'Conda: List' in Sublime Text's command palette.
 
-        When 'Conda: List' is clicked by the user, the command
-        palette will show all available conda environments.
+        When 'Conda: List' is clicked by the user, the build output
+        displays all packages installed in the current environment.
         """
-        self.window.show_quick_panel(self.conda_environments, None)
+        self.window.show_quick_panel(self.environment_packages, None)
+
+    @property
+    def environment_packages(self):
+        """"""
+        cmd = [self.executable, '-m', 'conda', 'list']
+
+        try:
+            environment_path = self.window.project_data()['conda_environment']
+            environment = os.path.basename(environment_path)
+            cmd.extend(['--name', environment])
+        except KeyError:
+            pass
+
+        self.window.run_command('exec', {'cmd': cmd})
 
 
 class CreateCondaEnvironmentCommand(CondaCommand):
