@@ -166,7 +166,7 @@ class DeactivateCondaEnvironmentCommand(CondaCommand):
         self.window.set_project_data(project_data)
 
 
-class ExecuteCondaEnvironmentCommand(Default.exec.ExecCommand):
+class ExecuteCondaEnvironmentCommand(Default.exec.ExecCommand, CondaCommand):
     """Override Sublime Text's default ExecCommand with a targeted build."""
 
     def run(self, **kwargs):
