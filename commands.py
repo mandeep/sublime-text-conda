@@ -204,10 +204,9 @@ class InstallCondaPackageCommand(CondaCommand):
             environment = os.path.basename(environment_path)
             cmd = [self.executable, '-m', 'conda', 'install', package,
                    '--name', environment, '-y', '-q']
+            self.window.run_command('exec', {'cmd': cmd})
         except KeyError:
-            pass
-
-        self.window.run_command('exec', {'cmd': cmd})
+            sublime.status_message('No active conda environment.')
 
 
 class RemoveCondaPackageCommand(CondaCommand):
