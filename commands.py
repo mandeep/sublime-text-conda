@@ -1,5 +1,8 @@
 import os
+import subprocess
 import sys
+
+import json
 
 import sublime
 import sublime_plugin
@@ -32,32 +35,6 @@ class CondaCommand(sublime_plugin.WindowCommand):
             return environments
         else:
             return ['No Conda Environments Found']
-
-
-class ListCondaEnvironmentCommand(CondaCommand):
-    """Contains all of the methods needed to list all installed packages."""
-
-    def run(self):
-        """Display 'Conda: List' in Sublime Text's command palette.
-
-        When 'Conda: List' is clicked by the user, the build output
-        displays all packages installed in the current environment.
-        """
-        self.window.show_quick_panel(self.environment_packages, None)
-
-    @property
-    def environment_packages(self):
-        """"""
-        cmd = [self.executable, '-m', 'conda', 'list']
-
-        try:
-            environment_path = self.window.project_data()['conda_environment']
-            environment = os.path.basename(environment_path)
-            cmd.extend(['--name', environment])
-        except KeyError:
-            pass
-
-        self.window.run_command('exec', {'cmd': cmd})
 
 
 class CreateCondaEnvironmentCommand(CondaCommand):
@@ -189,6 +166,36 @@ class DeactivateCondaEnvironmentCommand(CondaCommand):
         self.window.set_project_data(project_data)
 
 
+class ListCondaPackageCommand(CondaCommand):
+    """Contains all of the methods needed to list all installed packages."""
+
+    def run(self):
+        """Display 'Conda: List' in Sublime Text's command palette.
+
+        When 'Conda: List' is clicked by the user, the build output
+        displays all packages installed in the current environment.
+        """
+        self.window.show_quick_panel(self.environment_packages, None)
+
+    @property
+    def environment_packages(self):
+        """List each package name and version installed in the environment."""
+        try:
+            environment_path = self.window.project_data()['conda_environment']
+            environment = os.path.basename(environment_path)
+
+            package_data = subprocess.check_output([self.executable, '-m', 'conda', 'list',
+                                                    '--name', environment, '--json'])
+
+            packages_info = json.loads(package_data.decode())
+            packages = [[package['name'], package['dist_name']]
+                        for package in packages_info]
+
+            return packages
+        except KeyError:
+            return ['No Active Conda Environment']
+
+
 class InstallCondaPackageCommand(CondaCommand):
     """Install a Python package via conda."""
 
@@ -213,20 +220,38 @@ class RemoveCondaPackageCommand(CondaCommand):
     """Remove a Python package via conda."""
 
     def run(self):
-        """Display an input box allowing the user to input a package name."""
-        self.window.show_input_panel('Package Name:', '', self.remove_package,
-                                     None, None)
+        """Display an input box allowing the user to pick a package to remove."""
+        self.window.show_quick_panel(self.environment_packages, self.remove_package)
 
-    def remove_package(self, package):
-        """Remove the given package name via conda."""
+    @property
+    def environment_packages(self):
+        """List each package name and version installed in the environment.
+
+        This property had to be duplicated as the attribute from
+        ListCondaPackageCommand could not be inherited properly.
+        """
         try:
             environment_path = self.window.project_data()['conda_environment']
             environment = os.path.basename(environment_path)
-            cmd = [self.executable, '-m', 'conda', 'remove', package,
-                   '--name', environment, '-y', '-q']
-        except KeyError:
-            pass
 
+            package_data = subprocess.check_output([self.executable, '-m', 'conda', 'list',
+                                                    '--name', environment, '--json'])
+
+            packages_info = json.loads(package_data.decode())
+            packages = [[package['name'], package['dist_name']]
+                        for package in packages_info]
+
+            return packages
+        except KeyError:
+            return ['No Active Conda Environment']
+
+    def remove_package(self, index):
+        """Remove the given package name via conda."""
+        package_to_remove = self.environment_packages[index][0]
+        environment_path = self.window.project_data()['conda_environment']
+        environment = os.path.basename(environment_path)
+        cmd = [self.executable, '-m', 'conda', 'remove', package_to_remove,
+               '--name', environment, '-y', '-q']
         self.window.run_command('exec', {'cmd': cmd})
 
 
