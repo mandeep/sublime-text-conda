@@ -104,6 +104,19 @@ class RemoveCondaEnvironmentCommand(CondaCommand):
             self.window.run_command('exec', {'cmd': cmd})
 
 
+class ListCondaEnvironmentCommand(CondaCommand):
+    """Contains the methods needed to list available conda environments."""
+
+    def run(self):
+        """Display 'Conda: List' in Sublime Text's command palette.
+
+        When 'Conda: List' is clicked by the user, the command
+        palette will show all available conda environments.
+        """
+        self.window.show_quick_panel(self.conda_environments,
+                                     None)
+
+
 class ActivateCondaEnvironmentCommand(CondaCommand):
     """Contains the methods needed to activate a conda environment."""
 
