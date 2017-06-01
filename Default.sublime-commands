@@ -1,7 +1,7 @@
 [
     { "caption": "Conda: Create Environment", "command": "create_conda_environment" },
     { "caption": "Conda: Remove Environment", "command": "remove_conda_environment" },
-    { "caption": "Conda: List Environment", "command": "list_conda_environment" },
+    { "caption": "Conda: List Environments", "command": "list_conda_environment" },
     { "caption": "Conda: Activate Environment", "command": "activate_conda_environment" },
     { "caption": "Conda: Deactivate Environment", "command": "deactivate_conda_environment" },
     { "caption": "Conda: List Packages", "command": "list_conda_package" },
