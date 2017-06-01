@@ -153,17 +153,18 @@ class DeactivateCondaEnvironmentCommand(CondaCommand):
 
     def deactivate_environment(self, index):
         """Deactivate the environment selected in the command palette."""
-        sublime.status_message('Deactivated conda environment: {}'
-                               .format(self.conda_environments[index][0]))
+        if index != -1:
+            sublime.status_message('Deactivated conda environment: {}'
+                                   .format(self.conda_environments[index][0]))
 
-        project_data = self.window.project_data()
+            project_data = self.window.project_data()
 
-        try:
-            del project_data['conda_environment']
-        except KeyError:
-            sublime.status_message('No active conda environment')
+            try:
+                del project_data['conda_environment']
+            except KeyError:
+                sublime.status_message('No active conda environment')
 
-        self.window.set_project_data(project_data)
+            self.window.set_project_data(project_data)
 
 
 class ListCondaPackageCommand(CondaCommand):
@@ -247,12 +248,13 @@ class RemoveCondaPackageCommand(CondaCommand):
 
     def remove_package(self, index):
         """Remove the given package name via conda."""
-        package_to_remove = self.environment_packages[index][0]
-        environment_path = self.window.project_data()['conda_environment']
-        environment = os.path.basename(environment_path)
-        cmd = [self.executable, '-m', 'conda', 'remove', package_to_remove,
-               '--name', environment, '-y', '-q']
-        self.window.run_command('exec', {'cmd': cmd})
+        if index != -1:
+            package_to_remove = self.environment_packages[index][0]
+            environment_path = self.window.project_data()['conda_environment']
+            environment = os.path.basename(environment_path)
+            cmd = [self.executable, '-m', 'conda', 'remove', package_to_remove,
+                   '--name', environment, '-y', '-q']
+            self.window.run_command('exec', {'cmd': cmd})
 
 
 class ExecuteCondaEnvironmentCommand(Default.exec.ExecCommand):
