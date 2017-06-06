@@ -1,0 +1,4 @@
+Conda 0.1.2
+===========
+
+-  Renamed path in settings file to fix issue with empty settings file
