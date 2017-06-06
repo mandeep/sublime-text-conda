@@ -12,7 +12,7 @@
                     {
                         "caption": "Settings – Default",
                         "command": "open_file",
-                        "args": { "file": "${packages}/sublime-text-conda/conda.sublime-settings" }
+                        "args": { "file": "${packages}/Conda/conda.sublime-settings" }
                     },
                     {
                         "caption": "Settings – User",
