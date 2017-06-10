@@ -1,0 +1,4 @@
+Conda v0.1.4
+============
+
+-  Fixed issue where plugin would fail when project data wasn't in use

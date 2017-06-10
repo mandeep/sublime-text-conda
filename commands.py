@@ -36,6 +36,14 @@ class CondaCommand(sublime_plugin.WindowCommand):
         else:
             return ['No Conda Environments Found']
 
+    @property
+    def project_data(self):
+        """Retrieve the project data to be used in the current window."""
+        if self.window.project_data() is None:
+            return {}
+        else:
+            return self.window.project_data()
+
 
 class CreateCondaEnvironmentCommand(CondaCommand):
     """Contains the methods needed to create a conda environment."""
@@ -133,7 +141,7 @@ class ActivateCondaEnvironmentCommand(CondaCommand):
     def activate_environment(self, index):
         """Activate the environment selected from the command palette."""
         if index != -1:
-            project_data = self.window.project_data()
+            project_data = self.project_data
 
             project_data['conda_environment'] = self.conda_environments[index][1]
 
@@ -159,7 +167,8 @@ class DeactivateCondaEnvironmentCommand(CondaCommand):
     @property
     def active_environment(self):
         try:
-            environment = self.window.project_data()['conda_environment']
+            environment = self.project_data['conda_environment']
+
             return [[os.path.basename(environment), os.path.dirname(environment)]]
         except KeyError:
             return ['No Active Conda Environment']
@@ -167,17 +176,17 @@ class DeactivateCondaEnvironmentCommand(CondaCommand):
     def deactivate_environment(self, index):
         """Deactivate the environment selected in the command palette."""
         if index != -1:
-            sublime.status_message('Deactivated conda environment: {}'
-                                   .format(self.conda_environments[index][0]))
-
-            project_data = self.window.project_data()
-
             try:
+                project_data = self.project_data
+
                 del project_data['conda_environment']
+
+                self.window.set_project_data(project_data)
+
+                sublime.status_message('Deactivated conda environment: {}'
+                                       .format(self.conda_environments[index][0]))
             except KeyError:
                 sublime.status_message('No active conda environment')
-
-            self.window.set_project_data(project_data)
 
 
 class ListCondaPackageCommand(CondaCommand):
@@ -195,7 +204,7 @@ class ListCondaPackageCommand(CondaCommand):
     def environment_packages(self):
         """List each package name and version installed in the environment."""
         try:
-            environment_path = self.window.project_data()['conda_environment']
+            environment_path = self.project_data['conda_environment']
             environment = os.path.basename(environment_path)
 
             package_data = subprocess.check_output([self.executable, '-m', 'conda', 'list',
@@ -221,7 +230,7 @@ class InstallCondaPackageCommand(CondaCommand):
     def install_package(self, package):
         """Install the given package name via conda."""
         try:
-            environment_path = self.window.project_data()['conda_environment']
+            environment_path = self.project_data['conda_environment']
             environment = os.path.basename(environment_path)
             cmd = [self.executable, '-m', 'conda', 'install', package,
                    '--name', environment, '-y', '-q']
@@ -245,7 +254,7 @@ class RemoveCondaPackageCommand(CondaCommand):
         ListCondaPackageCommand could not be inherited properly.
         """
         try:
-            environment_path = self.window.project_data()['conda_environment']
+            environment_path = self.project_data['conda_environment']
             environment = os.path.basename(environment_path)
 
             package_data = subprocess.check_output([self.executable, '-m', 'conda', 'list',
@@ -263,14 +272,18 @@ class RemoveCondaPackageCommand(CondaCommand):
         """Remove the given package name via conda."""
         if index != -1:
             package_to_remove = self.environment_packages[index][0]
-            environment_path = self.window.project_data()['conda_environment']
+
+            environment_path = self.project_data['conda_environment']
+
             environment = os.path.basename(environment_path)
+
             cmd = [self.executable, '-m', 'conda', 'remove', package_to_remove,
                    '--name', environment, '-y', '-q']
+
             self.window.run_command('exec', {'cmd': cmd})
 
 
-class ExecuteCondaEnvironmentCommand(Default.exec.ExecCommand):
+class ExecuteCondaEnvironmentCommand(Default.exec.ExecCommand, CondaCommand):
     """Override Sublime Text's default ExecCommand with a targeted build."""
 
     def run(self, **kwargs):
@@ -281,7 +294,7 @@ class ExecuteCondaEnvironmentCommand(Default.exec.ExecCommand):
         environment's bin directory is used to build the file.
         """
         try:
-            environment = self.window.project_data()['conda_environment']
+            environment = self.project_data['conda_environment']
             
             if sys.platform == 'win32':
                 executable_path = '{}\\python' .format(environment)

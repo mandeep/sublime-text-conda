@@ -1,0 +1,15 @@
+notifications:
+  email: false
+
+language: python
+
+python:
+  - '3.4'
+  - '3.5'
+  - '3.6'
+
+install:
+  - pip install st-package-reviewer
+
+script:
+  - st_package_reviewer .
