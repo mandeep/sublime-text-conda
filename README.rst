@@ -1,4 +1,5 @@
 sublime-text-conda
+|travis|
 ==================
 
 sublime-text-conda is a Sublime Text plugin that allows users to work with Conda
@@ -75,3 +76,6 @@ the package is selected, the build output will show the package removal progress
 When selected from the command palette, `Conda: List Packages` will display
 inside the command palette all available packages inside the current conda
 environment.
+
+.. |travis| image:: https://img.shields.io/travis/mandeep/sublime-text-conda/master.svg
+    :target: https://travis-ci.org/mandeep/sublime-text-conda
