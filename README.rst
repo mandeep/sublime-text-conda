@@ -1,6 +1,6 @@
 sublime-text-conda
-|travis|
 ==================
+|travis|
 
 sublime-text-conda is a Sublime Text plugin that allows users to work with Conda
 directly within Sublime Text. Features include creating and removing Conda environments,
