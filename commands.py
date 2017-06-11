@@ -24,6 +24,11 @@ class CondaCommand(sublime_plugin.WindowCommand):
         return os.path.expanduser(self.settings.get('executable'))
 
     @property
+    def configuration(self):
+        """Retrieve the conda configuration file from settings."""
+        return os.path.expanduser(self.settings.get('configuration'))
+
+    @property
     def conda_environments(self):
         """Find all conda environments in the specified directory."""
         directory = os.path.expanduser(self.settings.get('environment_directory'))
@@ -220,7 +225,7 @@ class ListCondaPackageCommand(CondaCommand):
 
 
 class InstallCondaPackageCommand(CondaCommand):
-    """Install a Python package via conda."""
+    """Contains all of the methods needed to install a conda package."""
 
     def run(self):
         """Display an input box allowing the user to input a package name."""
@@ -240,7 +245,7 @@ class InstallCondaPackageCommand(CondaCommand):
 
 
 class RemoveCondaPackageCommand(CondaCommand):
-    """Remove a Python package via conda."""
+    """Contains all of the methods needed to remove a conda package."""
 
     def run(self):
         """Display an input box allowing the user to pick a package to remove."""
@@ -279,6 +284,85 @@ class RemoveCondaPackageCommand(CondaCommand):
 
             cmd = [self.executable, '-m', 'conda', 'remove', package_to_remove,
                    '--name', environment, '-y', '-q']
+
+            self.window.run_command('exec', {'cmd': cmd})
+
+
+class ListCondaChannelsCommand(CondaCommand):
+    """Contains all of the methods needed to display conda's channel sources."""
+
+    def run(self):
+        """Display 'Conda: List Channel Sources' in Sublime Text's command palette.
+
+        When 'Conda: List Channel Sources' is clicked by the user,
+        the command palette displays all of the channel sources found
+        in the condarc configuration file.
+        """
+        self.window.show_quick_panel(self.channel_sources, None)
+
+    @property
+    def channel_sources(self):
+        """List each channel source found in the condarc configuration file."""
+        sources = subprocess.check_output([self.executable, '-m', 'conda', 'config',
+                                          '--show-sources', '--json'])
+        sources = json.loads(sources.decode())
+
+        return sources[self.configuration]['channels']
+
+
+class AddCondaChannelCommand(CondaCommand):
+    """Contains all of the methods needed to add a conda channel source."""
+
+    def run(self):
+        """Display 'Conda: Add Channel Source' in Sublime Text's command palette.
+
+        When 'Conda: Add Channel Source' is clicked by the user,
+        an input box will show allowing the user to type the name
+        of the channel to add.
+        """
+        self.window.show_input_panel('Conda Channel Name:', '',
+                                     self.add_channel, None, None)
+
+    def add_channel(self, channel):
+        """Add the given channel to the condarc configuration file."""
+        cmd = [self.executable, '-m', 'conda', 'config', '--add',
+               'channels', channel]
+
+        self.window.run_command('exec', {'cmd': cmd})
+
+
+class RemoveCondaChannelCommand(CondaCommand):
+    """Contains all of the methods needed to remove a conda channel source."""
+
+    def run(self):
+        """Display 'Conda: Remove Channel Source' in Sublime Text's command palette.
+
+        When 'Conda: Remove Channel Source' is clicked by the user,
+        the command palette will show a list of channel sources
+        available to be removed by the user.
+        """
+        self.window.show_quick_panel(self.channel_sources, self.remove_channel)
+
+    @property
+    def channel_sources(self):
+        """List each channel source found in the condarc configuration file.
+
+        This property had to be duplicated as the attribute from
+        ListCondaChannelCommand could not be inherited properly.
+        """
+        sources = subprocess.check_output([self.executable, '-m', 'conda', 'config',
+                                          '--show-sources', '--json'])
+        sources = json.loads(sources.decode())
+
+        return sources[self.configuration]['channels']
+
+    def remove_channel(self, index):
+        """Remove a channel from the condarc configuration file."""
+        if index != -1:
+            channel = self.channel_sources[index]
+
+            cmd = [self.executable, '-m', 'conda', 'config', '--remove',
+                   'channels', channel]
 
             self.window.run_command('exec', {'cmd': cmd})
 

@@ -7,4 +7,7 @@
     { "caption": "Conda: List Packages", "command": "list_conda_package" },
     { "caption": "Conda: Install Package", "command": "install_conda_package" },
     { "caption": "Conda: Remove Package", "command": "remove_conda_package" },
+    { "caption": "Conda: List Channel Sources", "command": "list_conda_channels" },
+    { "caption": "Conda: Add Channel Source", "command": "add_conda_channel" },
+    { "caption": "Conda: Remove Channel Source", "command": "remove_conda_channel" }
 ]

@@ -7,4 +7,7 @@
     // Directory in which the conda envs are stored
     // Default location is the user's home directory
     "environment_directory": "~/anaconda3/envs/",
+
+    // configuration is the path to conda's configuration file
+    "configuration": "~/.condarc"
 }
