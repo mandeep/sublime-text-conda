@@ -25,9 +25,9 @@ Usage
 =====
 
 Once installed, Conda's commands will be located inside the command palette. These commands
-include `Create Environment`, `Remove Environment`, `List Environments`, 
-`Activate Environment`, `Deactivate Environment`,  `Install Package`, `Remove Package`,
-and `List Packages`.
+include ``Create Environment``, ``Remove Environment``, ``List Environments``, 
+``Activate Environment``, ``Deactivate Environment``,  ``Install Package``, ``Remove Package``,
+``List Packages``, ``Add Channel Source``, ``Remove Channel Source``, and ``List Channel Sources``.
 
 **Conda: Create Environment**
 
