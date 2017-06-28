@@ -1,0 +1,4 @@
+Conda v0.2.0
+============
+
+-  Added ability to list, add, and remove channels
