@@ -1,5 +1,5 @@
-sublime-text-conda
-==================
+.. image:: header.png
+
 |travis|
 
 sublime-text-conda is a Sublime Text plugin that allows users to work with Conda
