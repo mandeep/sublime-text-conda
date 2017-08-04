@@ -74,5 +74,23 @@ When selected from the command palette, `Conda: List Packages` will display
 inside the command palette all available packages inside the current conda
 environment.
 
+**Conda: Add Channel Source**
+
+When selected from the command palette, `Conda: Add Channel Source` will provide an
+input box for the name of the desired channel to add. Once the channel
+is typed, the build output will show the channel source progress.
+
+**Conda: Remove Channel Source**
+
+When selected from the command palette, `Conda: Remove Channel Source` will display
+inside the command palette all available channel sources to remove. Once clicked,
+the selected channel source remove from the conda configuration file.
+
+**Conda: List Channel Sources**
+
+When selected from the command palette, `Conda: List Channel Sources` will display
+inside the command palette all channel sources listed inside the conda configuration
+file.
+
 .. |travis| image:: https://img.shields.io/travis/mandeep/sublime-text-conda/master.svg
     :target: https://travis-ci.org/mandeep/sublime-text-conda
