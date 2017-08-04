@@ -2,9 +2,9 @@
 
 |travis|
 
-sublime-text-conda is a Sublime Text plugin that allows users to work with Conda
-directly within Sublime Text. Features include creating and removing Conda environments,
-activating and deactivating Conda environments, and installing and removing Conda
+sublime-text-conda is a Sublime Text plugin that allows users to work with conda
+directly within Sublime Text. Features include creating and removing conda environments,
+activating and deactivating conda environments, and installing and removing conda
 packages.
 
 Installation
@@ -12,7 +12,7 @@ Installation
 
 sublime-text-conda can be found on the Package Control repository. To install the plugin
 via Package Control, open the command palette, select `Package Control: Install Package`
-and search for `Conda`. Package Control will then install the plugin and the plugin
+and search for `conda`. Package Control will then install the plugin and the plugin
 settings will be located in the `Package Settings` submenu.
 
 If you would rather install from source, simply run::
@@ -24,10 +24,7 @@ inside the Sublime Text packages folder.
 Usage
 =====
 
-Once installed, Conda's commands will be located inside the command palette. These commands
-include ``Create Environment``, ``Remove Environment``, ``List Environments``, 
-``Activate Environment``, ``Deactivate Environment``,  ``Install Package``, ``Remove Package``,
-``List Packages``, ``Add Channel Source``, ``Remove Channel Source``, and ``List Channel Sources``.
+Once installed, a ``Conda`` build system will appear in the build sytem menu and conda's commands will be located inside the command palette. The ``Conda`` build system must be selected in order to use the commands. These commands include ``Create Environment``, ``Remove Environment``, ``List Environments``, ``Activate Environment``, ``Deactivate Environment``, ``Install Package``, ``Remove Package``, ``List Packages``, ``Add Channel Source``, ``Remove Channel Source``, and ``List Channel Sources``.
 
 **Conda: Create Environment**
 
