@@ -1,0 +1,5 @@
+Conda v0.2.1
+============
+
+-  Add build system instructions in install.txt and README
+-  Add Github and Package Control links in install.txt

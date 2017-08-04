@@ -3,6 +3,17 @@ ____ _  _ ___  _    _ _  _ ____    ___ ____ _  _ ___    ____ ____ _  _ ___  ____
 ___] |__| |__] |___ | |  | |___     |  |___ _/\_  |     |___ |__| | \| |__/ |  | 
                                                                                  
 
+              https://www.github.com/mandeep/sublime-text-conda
+                  https://packagecontrol.io/packages/Conda
+
 sublime-text-conda assumes that conda can be found in Anaconda's default install path.
 If the install path was changed when installing Anaconda or if you're using Miniconda,
-sublime-text-conda's settings will need to be changed in Package Settings.
+sublime-text-conda's settings will need to be changed in
+Preferences -> Package Settings -> Conda
+
+To start using this plugin, first select the 'Conda' build system
+from Tools -> Build System. Once the build system is selected, you can access the Conda
+commands via the command palette.
+
+If you need further help or would like to report an issue, please visit the GitHub repository
+and file an issue.
