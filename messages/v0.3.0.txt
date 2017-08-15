@@ -1,0 +1,4 @@
+Conda v0.3.0
+============
+
+-  Add root conda environment to available conda environments

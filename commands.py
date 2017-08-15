@@ -29,12 +29,24 @@ class CondaCommand(sublime_plugin.WindowCommand):
         return os.path.expanduser(self.settings.get('configuration'))
 
     @property
+    def root_directory(self):
+        """Retrieve the directory of conda's root environment."""
+        if sys.platform == 'win32':
+            root_directory = os.path.dirname(self.executable)
+        else:
+            root_directory = os.path.dirname(self.executable).replace('bin', '')
+
+        return root_directory
+
+    @property
     def conda_environments(self):
         """Find all conda environments in the specified directory."""
         directory = os.path.expanduser(self.settings.get('environment_directory'))
 
         environments = [[environment, os.path.join(directory, environment)]
                         for environment in os.listdir(directory)]
+
+        environments.append(['root', self.root_directory])
 
         if len(environments) > 0:
             return environments
@@ -171,10 +183,15 @@ class DeactivateCondaEnvironmentCommand(CondaCommand):
 
     @property
     def active_environment(self):
+        """Retrieve the active conda environment."""
         try:
             environment = self.project_data['conda_environment']
 
-            return [[os.path.basename(environment), os.path.dirname(environment)]]
+            if environment == self.root_directory:
+                return [['root', os.path.dirname(environment)]]
+            else:
+                return [[os.path.basename(environment), os.path.dirname(environment)]]
+
         except KeyError:
             return ['No Active Conda Environment']
 
