@@ -188,9 +188,11 @@ class DeactivateCondaEnvironmentCommand(CondaCommand):
             environment = self.project_data['conda_environment']
 
             if environment == self.root_directory:
-                return [['root', os.path.dirname(environment)]]
+                environment_name = 'root'
             else:
-                return [[os.path.basename(environment), os.path.dirname(environment)]]
+                environment_name = os.path.basename(environment)
+
+            return [[environment_name, os.path.dirname(environment)]]
 
         except KeyError:
             return ['No Active Conda Environment']
