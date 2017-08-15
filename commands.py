@@ -43,15 +43,11 @@ class CondaCommand(sublime_plugin.WindowCommand):
         """Find all conda environments in the specified directory."""
         directory = os.path.expanduser(self.settings.get('environment_directory'))
 
-        environments = [[environment, os.path.join(directory, environment)]
-                        for environment in os.listdir(directory)]
+        environments = [['root', self.root_directory]]
+        environments.extend([[environment, os.path.join(directory, environment)]
+                            for environment in os.listdir(directory)])
 
-        environments.append(['root', self.root_directory])
-
-        if len(environments) > 0:
-            return environments
-        else:
-            return ['No Conda Environments Found']
+        return environments
 
     @property
     def project_data(self):
