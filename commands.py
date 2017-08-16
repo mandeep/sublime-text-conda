@@ -325,6 +325,20 @@ class ListCondaChannelsCommand(CondaCommand):
         return sources[self.configuration]['channels']
 
 
+class SearchCondaPackageCommand(CondaCommand):
+    """Contains all of the methods needed to search for a conda package."""
+
+    def run(self):
+        """Display an input box allowing the user to input a package name."""
+        self.window.show_input_panel('Package Name:', '', self.search_package,
+                                     None, None)
+
+    def search_package(self, package):
+        """Search for a package included in the defaults channel."""
+        cmd = [self.executable, '-m', 'conda', 'search', package]
+        self.window.run_command('exec', {'cmd': cmd})
+
+
 class AddCondaChannelCommand(CondaCommand):
     """Contains all of the methods needed to add a conda channel source."""
 

@@ -2,3 +2,4 @@ Conda v0.3.0
 ============
 
 -  Add root conda environment to available conda environments
+-  Add 'Conda: Search Package' command that searches for packages in the defaults channel
