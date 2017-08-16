@@ -57,6 +57,32 @@ class CondaCommand(sublime_plugin.WindowCommand):
         else:
             return self.window.project_data()
 
+    @property
+    def startupinfo(self):
+        """Property used to hide command prompts when on Windows platforms."""
+        startupinfo = None
+
+        if sys.platform == 'win32':
+            startupinfo = subprocess.STARTUPINFO()
+
+            if sys.version_info.major == 3:
+                startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+            else:
+                startupinfo.dwFlags |= subprocess._subprocess.STARTF_USESHOWWINDOW
+
+        return startupinfo
+
+    def retrieve_environment_name(self, path):
+        """Retrieve the environment name from the active environment path.
+
+        If the active environment is the root environment, 'root' must be
+        returned instead of the basename from the environment path.
+        """
+        if path == self.root_directory:
+            return 'root'
+        else:
+            return os.path.basename(path)
+
 
 class CreateCondaEnvironmentCommand(CondaCommand):
     """Contains the methods needed to create a conda environment."""
@@ -181,14 +207,10 @@ class DeactivateCondaEnvironmentCommand(CondaCommand):
     def active_environment(self):
         """Retrieve the active conda environment."""
         try:
-            environment = self.project_data['conda_environment']
+            environment_path = self.project_data['conda_environment']
+            environment_name = self.retrieve_environment_name(environment_path)
 
-            if environment == self.root_directory:
-                environment_name = 'root'
-            else:
-                environment_name = os.path.basename(environment)
-
-            return [[environment_name, os.path.dirname(environment)]]
+            return [[environment_name, os.path.dirname(environment_path)]]
 
         except KeyError:
             return ['No Active Conda Environment']
@@ -225,10 +247,11 @@ class ListCondaPackageCommand(CondaCommand):
         """List each package name and version installed in the environment."""
         try:
             environment_path = self.project_data['conda_environment']
-            environment = os.path.basename(environment_path)
+            environment = self.retrieve_environment_name(environment_path)
 
             package_data = subprocess.check_output([self.executable, '-m', 'conda', 'list',
-                                                    '--name', environment, '--json'])
+                                                    '--name', environment, '--json'],
+                                                   startupinfo=self.startupinfo)
 
             packages_info = json.loads(package_data.decode())
             packages = [[package['name'], package['dist_name']]
@@ -251,7 +274,7 @@ class InstallCondaPackageCommand(CondaCommand):
         """Install the given package name via conda."""
         try:
             environment_path = self.project_data['conda_environment']
-            environment = os.path.basename(environment_path)
+            environment = self.retrieve_environment_name(environment_path)
             cmd = [self.executable, '-m', 'conda', 'install', package,
                    '--name', environment, '-y', '-q']
             self.window.run_command('exec', {'cmd': cmd})
@@ -275,10 +298,11 @@ class RemoveCondaPackageCommand(CondaCommand):
         """
         try:
             environment_path = self.project_data['conda_environment']
-            environment = os.path.basename(environment_path)
+            environment = self.retrieve_environment_name(environment_path)
 
             package_data = subprocess.check_output([self.executable, '-m', 'conda', 'list',
-                                                    '--name', environment, '--json'])
+                                                    '--name', environment, '--json'],
+                                                   startupinfo=self.startupinfo)
 
             packages_info = json.loads(package_data.decode())
             packages = [[package['name'], package['dist_name']]
@@ -295,7 +319,7 @@ class RemoveCondaPackageCommand(CondaCommand):
 
             environment_path = self.project_data['conda_environment']
 
-            environment = os.path.basename(environment_path)
+            environment = self.retrieve_environment_name(environment_path)
 
             cmd = [self.executable, '-m', 'conda', 'remove', package_to_remove,
                    '--name', environment, '-y', '-q']
@@ -319,7 +343,8 @@ class ListCondaChannelsCommand(CondaCommand):
     def channel_sources(self):
         """List each channel source found in the condarc configuration file."""
         sources = subprocess.check_output([self.executable, '-m', 'conda', 'config',
-                                          '--show-sources', '--json'])
+                                          '--show-sources', '--json'],
+                                          startupinfo=self.startupinfo)
         sources = json.loads(sources.decode())
 
         return sources[self.configuration]['channels']
@@ -380,7 +405,8 @@ class RemoveCondaChannelCommand(CondaCommand):
         ListCondaChannelCommand could not be inherited properly.
         """
         sources = subprocess.check_output([self.executable, '-m', 'conda', 'config',
-                                          '--show-sources', '--json'])
+                                          '--show-sources', '--json'],
+                                          startupinfo=self.startupinfo)
         sources = json.loads(sources.decode())
 
         return sources[self.configuration]['channels']

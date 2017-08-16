@@ -1,0 +1,5 @@
+Conda v0.3.1
+============
+
+-  Fix issue with command prompt opening on Windows platforms
+-  Fix issue with Conda Package commands not working on Windows platforms
