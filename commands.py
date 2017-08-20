@@ -44,8 +44,12 @@ class CondaCommand(sublime_plugin.WindowCommand):
         directory = os.path.expanduser(self.settings.get('environment_directory'))
 
         environments = [['root', self.root_directory]]
-        environments.extend([[environment, os.path.join(directory, environment)]
-                            for environment in os.listdir(directory)])
+
+        for environment in os.listdir(directory):
+            environment_path = os.path.join(directory, environment)
+            # conda 4.4 added a _run environment so it needs to be excluded
+            if os.path.isdir(environment_path) and environment != '_run':
+                environments.append([environment, environment_path])
 
         return environments
 
