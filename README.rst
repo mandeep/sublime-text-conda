@@ -1,6 +1,6 @@
 .. image:: header.png
 
-|travis|
+|travis| |release| |license| |downloads|
 
 sublime-text-conda is a Sublime Text plugin that allows users to work with conda
 directly within Sublime Text. Features include creating and removing conda environments,
@@ -94,3 +94,12 @@ file.
 
 .. |travis| image:: https://img.shields.io/travis/mandeep/sublime-text-conda/master.svg
     :target: https://travis-ci.org/mandeep/sublime-text-conda
+
+.. |release| image:: https://img.shields.io/github/release/mandeep/sublime-text-conda.svg
+    :target: https://github.com/mandeep/sublime-text-conda/releases
+
+.. |license| image:: https://img.shields.io/github/license/mandeep/sublime-text-conda.svg
+    :target: https://github.com/mandeep/sublime-text-conda/blob/master/LICENSE
+
+.. |downloads| image:: https://img.shields.io/packagecontrol/dm/Conda.svg
+    :target: https://packagecontrol.io/packages/Conda
