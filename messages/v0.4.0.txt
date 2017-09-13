@@ -1,0 +1,5 @@
+Conda v0.4.0
+============
+
+-  Change how the build system is executed allowing for Cancel Build to be called
+-  Fix issue with command palette being empty when channel sources are unavailable
