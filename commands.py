@@ -347,7 +347,10 @@ class ListCondaChannelsCommand(CondaCommand):
                                           startupinfo=self.startupinfo)
         sources = json.loads(sources.decode())
 
-        return sources[self.configuration]['channels']
+        try:
+            return sources[self.configuration]['channels']
+        except KeyError:
+            return ['No Channel Sources Available']
 
 
 class SearchCondaPackageCommand(CondaCommand):
@@ -409,7 +412,10 @@ class RemoveCondaChannelCommand(CondaCommand):
                                           startupinfo=self.startupinfo)
         sources = json.loads(sources.decode())
 
-        return sources[self.configuration]['channels']
+        try:
+            return sources[self.configuration]['channels']
+        except KeyError:
+            return ['No Channel Sources Available']
 
     def remove_channel(self, index):
         """Remove a channel from the condarc configuration file."""
