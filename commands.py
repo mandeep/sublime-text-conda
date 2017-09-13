@@ -351,7 +351,10 @@ class ListCondaChannelsCommand(CondaCommand):
                                           startupinfo=self.startupinfo)
         sources = json.loads(sources.decode())
 
-        return sources[self.configuration]['channels']
+        try:
+            return sources[self.configuration]['channels']
+        except KeyError:
+            return ['No Channel Sources Available']
 
 
 class SearchCondaPackageCommand(CondaCommand):
@@ -413,7 +416,10 @@ class RemoveCondaChannelCommand(CondaCommand):
                                           startupinfo=self.startupinfo)
         sources = json.loads(sources.decode())
 
-        return sources[self.configuration]['channels']
+        try:
+            return sources[self.configuration]['channels']
+        except KeyError:
+            return ['No Channel Sources Available']
 
     def remove_channel(self, index):
         """Remove a channel from the condarc configuration file."""
@@ -426,7 +432,7 @@ class RemoveCondaChannelCommand(CondaCommand):
             self.window.run_command('exec', {'cmd': cmd})
 
 
-class ExecuteCondaEnvironmentCommand(Default.exec.ExecCommand, CondaCommand):
+class ExecuteCondaEnvironmentCommand(CondaCommand):
     """Override Sublime Text's default ExecCommand with a targeted build."""
 
     def run(self, **kwargs):
@@ -448,4 +454,4 @@ class ExecuteCondaEnvironmentCommand(Default.exec.ExecCommand, CondaCommand):
         except KeyError:
             pass
 
-        super(ExecuteCondaEnvironmentCommand, self).run(**kwargs)
+        self.window.run_command('exec', kwargs)
