@@ -422,7 +422,7 @@ class RemoveCondaChannelCommand(CondaCommand):
             self.window.run_command('exec', {'cmd': cmd})
 
 
-class ExecuteCondaEnvironmentCommand(Default.exec.ExecCommand, CondaCommand):
+class ExecuteCondaEnvironmentCommand(CondaCommand):
     """Override Sublime Text's default ExecCommand with a targeted build."""
 
     def run(self, **kwargs):
@@ -444,4 +444,4 @@ class ExecuteCondaEnvironmentCommand(Default.exec.ExecCommand, CondaCommand):
         except KeyError:
             pass
 
-        super(ExecuteCondaEnvironmentCommand, self).run(**kwargs)
+        self.window.run_command('exec', kwargs)
