@@ -46,6 +46,7 @@ class CondaCommand(sublime_plugin.WindowCommand):
         environments = [['root', self.root_directory]]
         environments.extend([[environment, os.path.join(directory, environment)]
                             for environment in os.listdir(directory)])
+
         return environments
 
     @property
