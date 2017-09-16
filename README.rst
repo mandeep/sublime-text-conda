@@ -92,7 +92,7 @@ When selected from the command palette, `Conda: List Channel Sources` will displ
 inside the command palette all channel sources listed inside the conda configuration
 file.
 
-.. |travis| .. image:: https://img.shields.io/travis/mandeep/sublime-text-conda/master.svg?style=flat-square
+.. |travis| image:: https://img.shields.io/travis/mandeep/sublime-text-conda/master.svg?style=flat-square
     :target: https://travis-ci.org/mandeep/sublime-text-conda
 
 .. |release| image:: https://img.shields.io/github/release/mandeep/sublime-text-conda.svg?style=flat-square
