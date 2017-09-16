@@ -92,17 +92,17 @@ When selected from the command palette, `Conda: List Channel Sources` will displ
 inside the command palette all channel sources listed inside the conda configuration
 file.
 
-.. |travis| image:: https://img.shields.io/travis/mandeep/sublime-text-conda/master.svg
+.. |travis| .. image:: https://img.shields.io/travis/mandeep/sublime-text-conda/master.svg?style=flat-square   
     :target: https://travis-ci.org/mandeep/sublime-text-conda
 
-.. |release| image:: https://img.shields.io/github/release/mandeep/sublime-text-conda.svg
+.. |release| image:: https://img.shields.io/github/release/mandeep/sublime-text-conda.svg?style=flat-square
     :target: https://github.com/mandeep/sublime-text-conda/releases
 
-.. |license| image:: https://img.shields.io/github/license/mandeep/sublime-text-conda.svg
+.. |license| image:: https://img.shields.io/github/license/mandeep/sublime-text-conda.svg?style=flat-square
     :target: https://github.com/mandeep/sublime-text-conda/blob/master/LICENSE
 
-.. |quality| image:: https://img.shields.io/scrutinizer/g/mandeep/sublime-text-conda.svg
+.. |quality| image:: https://img.shields.io/scrutinizer/g/mandeep/sublime-text-conda.svg?style=flat-square
     :target: https://scrutinizer-ci.com/g/mandeep/sublime-text-conda/
 
-.. |downloads| image:: https://img.shields.io/packagecontrol/dm/Conda.svg
+.. |downloads| image:: https://img.shields.io/packagecontrol/dm/Conda.svg?style=flat-square
     :target: https://packagecontrol.io/packages/Conda
