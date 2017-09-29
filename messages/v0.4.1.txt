@@ -1,0 +1,4 @@
+Conda v0.4.1
+============
+
+-  Fix issue with environments due to Anaconda 5 installer not creating envs directory

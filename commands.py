@@ -7,8 +7,6 @@ import json
 import sublime
 import sublime_plugin
 
-import Default
-
 
 class CondaCommand(sublime_plugin.WindowCommand):
     """Contains all of the attributes that will be inherited by other commands."""
@@ -41,13 +39,17 @@ class CondaCommand(sublime_plugin.WindowCommand):
     @property
     def conda_environments(self):
         """Find all conda environments in the specified directory."""
-        directory = os.path.expanduser(self.settings.get('environment_directory'))
+        try:
+            directory = os.path.expanduser(self.settings.get('environment_directory'))
 
-        environments = [['root', self.root_directory]]
-        environments.extend([[environment, os.path.join(directory, environment)]
-                            for environment in os.listdir(directory)])
+            environments = [['root', self.root_directory]]
+            environments.extend([[environment, os.path.join(directory, environment)]
+                                for environment in os.listdir(directory)])
 
-        return environments
+            return environments
+
+        except FileNotFoundError:
+            return [['root', self.root_directory]]
 
     @property
     def project_data(self):
