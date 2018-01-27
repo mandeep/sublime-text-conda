@@ -252,14 +252,14 @@ class ListCondaPackageCommand(CondaCommand):
             environment = self.retrieve_environment_name(environment_path)
 
             package_data = subprocess.check_output([self.executable, '-m', 'conda', 'list',
-                                                    '--name', environment, '--json'],
-                                                   startupinfo=self.startupinfo)
+                                                    '--name', environment],
+                                                   startupinfo=self.startupinfo, universal_newlines=True)
 
-            packages_info = json.loads(package_data.decode())
-            packages = [[package['name'], package['dist_name']]
-                        for package in packages_info]
+            packages = package_data.splitlines()[2:]
+            package_names = [packages[i].split()[0] for i, _ in enumerate(packages)]
 
-            return packages
+            return package_names
+        
         except KeyError:
             return ['No Active Conda Environment']
 
@@ -280,6 +280,7 @@ class InstallCondaPackageCommand(CondaCommand):
             cmd = [self.executable, '-m', 'conda', 'install', package,
                    '--name', environment, '-y', '-q']
             self.window.run_command('exec', {'cmd': cmd})
+        
         except KeyError:
             sublime.status_message('No active conda environment.')
 
@@ -303,21 +304,21 @@ class RemoveCondaPackageCommand(CondaCommand):
             environment = self.retrieve_environment_name(environment_path)
 
             package_data = subprocess.check_output([self.executable, '-m', 'conda', 'list',
-                                                    '--name', environment, '--json'],
-                                                   startupinfo=self.startupinfo)
+                                                    '--name', environment],
+                                                   startupinfo=self.startupinfo, universal_newlines=True)
 
-            packages_info = json.loads(package_data.decode())
-            packages = [[package['name'], package['dist_name']]
-                        for package in packages_info]
+            packages = package_data.splitlines()[2:]
+            package_names = [packages[i].split()[0] for i, _ in enumerate(packages)]
 
-            return packages
+            return package_names
+        
         except KeyError:
             return ['No Active Conda Environment']
 
     def remove_package(self, index):
         """Remove the given package name via conda."""
         if index != -1:
-            package_to_remove = self.environment_packages[index][0]
+            package_to_remove = self.environment_packages[index]
 
             environment_path = self.project_data['conda_environment']
 
@@ -351,6 +352,7 @@ class ListCondaChannelsCommand(CondaCommand):
 
         try:
             return sources[self.configuration]['channels']
+        
         except KeyError:
             return ['No Channel Sources Available']
 
@@ -416,6 +418,7 @@ class RemoveCondaChannelCommand(CondaCommand):
 
         try:
             return sources[self.configuration]['channels']
+        
         except KeyError:
             return ['No Channel Sources Available']
 
@@ -449,6 +452,7 @@ class ExecuteCondaEnvironmentCommand(CondaCommand):
                 executable_path = '{}/bin/python' .format(environment)
 
             kwargs['cmd'][0] = os.path.normpath(executable_path)
+        
         except KeyError:
             pass
 

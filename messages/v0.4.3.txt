@@ -1,0 +1,4 @@
+Conda v0.4.3
+============
+
+-  Fix Conda: List Packages command so that it includes packages installed by pip
