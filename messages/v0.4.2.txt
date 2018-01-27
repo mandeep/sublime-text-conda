@@ -1,0 +1,4 @@
+Conda v0.4.2
+============
+
+-  Set PYTHONIOENCODING to utf-8 in the Conda build system (thanks @mys721tx)
