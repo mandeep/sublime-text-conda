@@ -1,0 +1,4 @@
+Conda v0.4.4
+============
+
+-  Fix plugin settings on Windows being loaded as Unix settings
