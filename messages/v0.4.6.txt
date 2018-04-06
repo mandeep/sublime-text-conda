@@ -1,0 +1,4 @@
+Conda v0.4.6
+============
+
+-  Fix settings file not being loaded

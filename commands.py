@@ -14,7 +14,10 @@ class CondaCommand(sublime_plugin.WindowCommand):
     @property
     def settings(self):
         """Load the plugin settings for commands to use."""
-        return sublime.load_settings('conda.sublime-settings')
+        if sys.platform.startswith('win'):
+            return sublime.load_settings('Conda (Windows).sublime-settings')
+        else:
+            return sublime.load_settings('Conda.sublime-settings')
 
     @property
     def executable(self):
