@@ -1,0 +1,4 @@
+Conda v0.4.5
+============
+
+-  Add Windows and OSX specific files to Preferences->Packages->Conda menu
