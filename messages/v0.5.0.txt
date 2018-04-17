@@ -1,0 +1,5 @@
+Conda v0.5.0
+============
+
+-  Added the ability to load old settings files on Unix based systems
+-  Incremented minor version as the new settings file system could cause minor breakage
