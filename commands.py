@@ -275,7 +275,7 @@ class ListCondaPackageCommand(CondaCommand):
             package_names = [packages[i].split()[0] for i, _ in enumerate(packages)]
 
             return package_names
-        
+
         except KeyError:
             return ['No Active Conda Environment']
 
@@ -296,7 +296,7 @@ class InstallCondaPackageCommand(CondaCommand):
             cmd = [self.executable, '-m', 'conda', 'install', package,
                    '--name', environment, '-y', '-q']
             self.window.run_command('exec', {'cmd': cmd})
-        
+
         except KeyError:
             sublime.status_message('No active conda environment.')
 
@@ -327,7 +327,7 @@ class RemoveCondaPackageCommand(CondaCommand):
             package_names = [packages[i].split()[0] for i, _ in enumerate(packages)]
 
             return package_names
-        
+
         except KeyError:
             return ['No Active Conda Environment']
 
@@ -368,7 +368,7 @@ class ListCondaChannelsCommand(CondaCommand):
 
         try:
             return sources[self.configuration]['channels']
-        
+
         except KeyError:
             return ['No Channel Sources Available']
 
@@ -434,7 +434,7 @@ class RemoveCondaChannelCommand(CondaCommand):
 
         try:
             return sources[self.configuration]['channels']
-        
+
         except KeyError:
             return ['No Channel Sources Available']
 
@@ -461,15 +461,18 @@ class ExecuteCondaEnvironmentCommand(CondaCommand):
         """
         try:
             environment = self.project_data['conda_environment']
-            
+
             if sys.platform == 'win32':
                 executable_path = '{}\\python' .format(environment)
             else:
                 executable_path = '{}/bin/python' .format(environment)
 
             kwargs['cmd'][0] = os.path.normpath(executable_path)
-        
+
         except KeyError:
             pass
+
+        if kwargs.get('kill') is not None:
+            kwargs = {'kill': True}
 
         self.window.run_command('exec', kwargs)
