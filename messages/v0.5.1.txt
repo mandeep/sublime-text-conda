@@ -1,0 +1,4 @@
+Conda v0.5.1
+============
+
+-  Fix the 'Cancel Build' menu item in the Tools menu
