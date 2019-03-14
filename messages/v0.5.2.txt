@@ -1,0 +1,4 @@
+Conda v0.5.2
+============
+
+-  Fix Windows issue where GUI figures were not showing on build
