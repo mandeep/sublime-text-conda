@@ -1,0 +1,4 @@
+Conda v0.6.0
+============
+
+-  Add support for Python version 3.7

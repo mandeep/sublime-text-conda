@@ -124,7 +124,7 @@ class CreateCondaEnvironmentCommand(CondaCommand):
         """
         self.environment = environment
 
-        python_versions = ['Python 2.7', 'Python 3.5', 'Python 3.6']
+        python_versions = ['Python 2.7', 'Python 3.5', 'Python 3.6', 'Python 3.7']
 
         self.window.show_quick_panel(python_versions, self.create_environment)
 
@@ -135,8 +135,10 @@ class CreateCondaEnvironmentCommand(CondaCommand):
                 python_version = 'python=2.7'
             elif index == 1:
                 python_version = 'python=3.5'
-            else:
+            elif index == 2:
                 python_version = 'python=3.6'
+            else:
+                python_version = 'python=3.7'
 
             cmd = [self.executable, '-m', 'conda', 'create',
                    '--name', self.environment, python_version, '-y', '-q']
