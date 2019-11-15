@@ -476,7 +476,7 @@ class ExecuteCondaEnvironmentCommand(CondaCommand):
         Required to address PATH issues that prevent some libraries from finding
         compiled dependencies.
         """
-        if sys.platform == 'win32' and self.conda_version > (4, 6):
+        if sys.platform == 'win32' and self.conda_version >= (4, 6):
             env_path = self.project_data['conda_environment']
             bin_path = os.path.join(env_path, 'Library', 'bin')
             os.environ['PATH'] = os.pathsep.join((bin_path, self.os_env_path))
