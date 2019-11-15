@@ -454,6 +454,37 @@ class RemoveCondaChannelCommand(CondaCommand):
 class ExecuteCondaEnvironmentCommand(CondaCommand):
     """Override Sublime Text's default ExecCommand with a targeted build."""
 
+    os_env_path = os.environ['PATH']
+
+    @property
+    def conda_version(self):
+        """
+        Returns this system's conda version in the form (major, minor, micro).
+        """
+        response = subprocess.check_output(
+            [self.executable, '-m', 'conda', 'info', '--json'],
+            startupinfo=self.startupinfo)
+        conda_info = json.loads(response.decode())
+        return tuple(int(n) for n in conda_info['conda_version'].split('.'))
+
+    def __enter__(self):
+        """
+        Temporarily modifies os.environ['PATH'] to include the target
+        environment's /bin directory if this is a Windows system using a conda
+        version >= 4.6.
+
+        Required to address PATH issues that prevent some libraries from finding
+        compiled dependencies.
+        """
+        if sys.platform == 'win32' and self.conda_version >= (4, 6):
+            env_path = self.project_data['conda_environment']
+            bin_path = os.path.join(env_path, 'Library', 'bin')
+            os.environ['PATH'] = os.pathsep.join((bin_path, self.os_env_path))
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        os.environ['PATH'] = self.os_env_path
+
     def run(self, **kwargs):
         """Run the current Python file with the conda environment's Python executable.
 
@@ -482,4 +513,5 @@ class ExecuteCondaEnvironmentCommand(CondaCommand):
         if kwargs.get('kill') is not None:
             kwargs = {'kill': True}
 
-        self.window.run_command('exec', kwargs)
+        with self:
+            self.window.run_command('exec', kwargs)
