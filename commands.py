@@ -1,5 +1,4 @@
 import os
-import re
 import subprocess
 import sys
 
@@ -463,16 +462,17 @@ class ExecuteCondaEnvironmentCommand(CondaCommand):
         Returns this system's conda version in the form (major, minor, micro).
         """
         response = subprocess.check_output(
-            [self.executable, '-m', 'conda', '--version'], 
-            startupinfo=self.startupinfo).decode().strip()        
-        return tuple(int(m) for m in re.findall(r'\d+', response))
-   
+            [self.executable, '-m', 'conda', 'info', '--json'],
+            startupinfo=self.startupinfo)
+        conda_info = json.loads(response.decode())
+        return tuple(int(n) for n in conda_info['conda_version'].split('.'))
+
     def __enter__(self):
         """
         Temporarily modifies os.environ['PATH'] to include the target
         environment's /bin directory if this is a Windows system using a conda
         version >= 4.6.
-        
+
         Required to address PATH issues that prevent some libraries from finding
         compiled dependencies.
         """
