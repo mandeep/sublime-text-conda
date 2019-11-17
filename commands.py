@@ -454,6 +454,10 @@ class RemoveCondaChannelCommand(CondaCommand):
 class ExecuteCondaEnvironmentCommand(CondaCommand):
     """Override Sublime Text's default ExecCommand with a targeted build."""
 
+    # :type       tuple[int]:  Used to cache conda version number to avoid
+    #                          repeated calls to `conda info --json`.
+    _conda_version = None
+
     os_env_path = os.environ['PATH']
 
     @property
@@ -461,11 +465,17 @@ class ExecuteCondaEnvironmentCommand(CondaCommand):
         """
         Returns this system's conda version in the form (major, minor, micro).
         """
-        response = subprocess.check_output(
-            [self.executable, '-m', 'conda', 'info', '--json'],
-            startupinfo=self.startupinfo)
-        conda_info = json.loads(response.decode())
-        return tuple(int(n) for n in conda_info['conda_version'].split('.'))
+        cls = type(self)
+        
+        if cls._conda_version is None:
+            response = subprocess.check_output(
+                [self.executable, '-m', 'conda', 'info', '--json'],
+                startupinfo=self.startupinfo)
+        
+            parsed = json.loads(response.decode())['conda_version']            
+            cls._conda_version = tuple(int(n) for n in parsed.split('.'))
+
+        return cls._conda_version
 
     def __enter__(self):
         """
