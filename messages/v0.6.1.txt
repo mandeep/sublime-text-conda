@@ -1,0 +1,4 @@
+Conda v0.6.1
+============
+
+-  Fix windows PATH issue causing import errors with some packages (courtesy of @jim-hart)
