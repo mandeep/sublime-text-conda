@@ -48,7 +48,7 @@ class CondaCommand(sublime_plugin.WindowCommand):
         if sys.platform == 'win32':
             root_directory = os.path.dirname(self.executable)
         else:
-            root_directory = os.path.dirname(self.executable).replace('bin', '')
+            base_directory = os.path.dirname(self.executable).rstrip('bin')
 
         return root_directory
 
