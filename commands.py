@@ -43,14 +43,14 @@ class CondaCommand(sublime_plugin.WindowCommand):
         return os.path.expanduser(self.settings.get('configuration'))
 
     @property
-    def root_directory(self):
-        """Retrieve the directory of conda's root environment."""
+    def base_directory(self):
+        """Retrieve the directory of conda's base environment."""
         if sys.platform == 'win32':
-            root_directory = os.path.dirname(self.executable)
+            base_directory = os.path.dirname(self.executable)
         else:
             base_directory = os.path.dirname(self.executable).rstrip('bin')
 
-        return root_directory
+        return base_directory
 
     @property
     def conda_environments(self):
@@ -58,14 +58,14 @@ class CondaCommand(sublime_plugin.WindowCommand):
         try:
             directory = os.path.expanduser(self.settings.get('environment_directory'))
 
-            environments = [['root', self.root_directory]]
+            environments = [['base', self.base_directory]]
             environments.extend([[environment, os.path.join(directory, environment)]
                                 for environment in os.listdir(directory)])
 
             return environments
 
         except FileNotFoundError:
-            return [['root', self.root_directory]]
+            return [['base', self.base_directory]]
 
     @property
     def project_data(self):
@@ -93,11 +93,11 @@ class CondaCommand(sublime_plugin.WindowCommand):
     def retrieve_environment_name(self, path):
         """Retrieve the environment name from the active environment path.
 
-        If the active environment is the root environment, 'root' must be
+        If the active environment is the base environment, 'base' must be
         returned instead of the basename from the environment path.
         """
-        if path == self.root_directory:
-            return 'root'
+        if path == self.base_directory:
+            return 'base'
         else:
             return os.path.basename(path)
 
@@ -466,13 +466,13 @@ class ExecuteCondaEnvironmentCommand(CondaCommand):
         Returns this system's conda version in the form (major, minor, micro).
         """
         cls = type(self)
-        
+
         if cls._conda_version is None:
             response = subprocess.check_output(
                 [self.executable, '-m', 'conda', 'info', '--json'],
                 startupinfo=self.startupinfo)
-        
-            parsed = json.loads(response.decode())['conda_version']            
+
+            parsed = json.loads(response.decode())['conda_version']
             cls._conda_version = tuple(int(n) for n in parsed.split('.'))
 
         return cls._conda_version
