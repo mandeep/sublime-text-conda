@@ -1,0 +1,5 @@
+Conda v0.7.0
+============
+
+-  Fix stripping all occurrences of 'bin' from conda installation paths
+-  Change root environment name to base environment to be consistent with conda
