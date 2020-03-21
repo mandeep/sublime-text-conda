@@ -19,7 +19,9 @@ If you would rather install from source, simply run::
 
     $  git clone git@github.com:mandeep/sublime-text-conda.git
 
-inside the Sublime Text packages folder.
+inside the Sublime Text packages folder. To find this folder, open Sublime Text and click
+on `Preferences->Browse Packages`. Cloning in this directory will manually install the plugin.
+For more information please visit https://www.sublimetext.com/docs/3/packages.html
 
 Usage
 =====
