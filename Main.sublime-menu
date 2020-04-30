@@ -9,36 +9,15 @@
         "children": [{
             "caption": "Conda",
             "children": [
-                    {
-                        "caption": "Settings – Default",
-                        "command": "open_file",
-                        "args": { "file": "${packages}/Conda/Conda.sublime-settings", "platform": "Linux" }
-                    },
-                    {
-                        "caption": "Settings – User",
-                        "command": "open_file",
-                        "args": { "file": "${packages}/User/Conda.sublime-settings", "platform": "Linux"}
-                    },
-                    {
-                        "caption": "Settings – Default",
-                        "command": "open_file",
-                        "args": { "file": "${packages}/Conda/Conda.sublime-settings", "platform": "OSX" }
-                    },
-                    {
-                        "caption": "Settings – User",
-                        "command": "open_file",
-                        "args": { "file": "${packages}/User/Conda.sublime-settings", "platform": "OSX"}
-                    },
-                    {
-                        "caption": "Settings – Default",
-                        "command": "open_file",
-                        "args": { "file": "${packages}/Conda/Conda (Windows).sublime-settings", "platform": "Windows" }
-                    },
-                    {
-                        "caption": "Settings – User",
-                        "command": "open_file",
-                        "args": { "file": "${packages}/User/Conda (Windows).sublime-settings", "platform": "Windows"}
-                    }
+                {
+                    "caption": "Settings",
+                    "command": "edit_settings",
+                    "args":
+                     {
+                         "base_file": "${packages}/Conda/Conda (${platform}).sublime-settings",
+                         "default": "{\n\t$0\n}\n"
+                     }
+                }
             ]
         }]
     }]
