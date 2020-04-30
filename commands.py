@@ -13,24 +13,11 @@ class CondaCommand(sublime_plugin.WindowCommand):
 
     @property
     def settings(self):
-        """Load the plugin settings for commands to use.
-
-        For Unix systems, the plugin will first try to load the old settings
-        file with the base name 'conda.sublime-settings'. If this file can't
-        be accessed the plugin will set the settings file to
-        the new settings file named 'Conda.sublime-settings'.
-        """
-        if sys.platform.startswith('win'):
-            return sublime.load_settings('Conda (Windows).sublime-settings')
-        else:
-            try:
-                settings = sublime.load_settings('conda.sublime-settings')
-                # sublime text doesn't tell us if the settings file exists unless we try to access it
-                os.path.expanduser(settings.get('environment_directory'))
-            except AttributeError:
-                settings = sublime.load_settings('Conda.sublime-settings')
-
-            return settings
+        """Load the platform-specific plugin settings for commands to use."""
+        env_vars = self.window.extract_variables()
+        filename = 'Conda (${platform}).sublime-settings'
+        expanded = sublime.expand_variables(filename, env_vars)
+        return sublime.load_settings(expanded)
 
     @property
     def executable(self):
