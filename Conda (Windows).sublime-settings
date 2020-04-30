@@ -1,4 +1,4 @@
-// Default settings for sublime-text-conda:
+// Default Windows settings for sublime-text-conda:
 {
     // executable is the path to anaconda's python
     // this python executable is used in order to find conda
@@ -18,6 +18,5 @@
 
     // when true, the script execution will be handed over to
     // the pythonw executable, instead of python
-    "use_pythonw": false,
-
+    "use_pythonw": false
 }

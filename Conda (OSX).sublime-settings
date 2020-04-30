@@ -1,0 +1,13 @@
+// Default OSX settings for sublime-text-conda:
+{
+    // executable is the path to anaconda's python
+    // this python executable is used in order to find conda
+    "executable": "~/anaconda3/bin/python3",
+
+    // Directory in which the conda envs are stored
+    // Default location is the user's home directory
+    "environment_directory": "~/anaconda3/envs/",
+
+    // configuration is the path to conda's configuration file
+    "configuration": "~/.condarc"
+}

@@ -1,4 +1,4 @@
-// Default settings for sublime-text-conda:
+// Default Linux settings for sublime-text-conda:
 {
     // executable is the path to anaconda's python
     // this python executable is used in order to find conda
