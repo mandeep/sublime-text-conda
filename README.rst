@@ -25,6 +25,14 @@ Once you have cloned the repository inside the packages folder, be sure to renam
 `sublime-text-conda` to `Conda`.
 For more information please visit https://www.sublimetext.com/docs/3/packages.html
 
+Settings
+========
+
+The settings file can be found in `Preferences->Package Settings->Conda->Settings - Default`. The
+paths may need to be changed depending on where you've installed anaconda/miniconda. For Windows
+users, the additional settings of `run_through_shell` and `use_pythonw` are available for when
+working on projects that require a GUI to open (such as showing a matplotlib plot).
+
 Usage
 =====
 
