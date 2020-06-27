@@ -4,6 +4,7 @@
     { "caption": "Conda: List Environments", "command": "list_conda_environment" },
     { "caption": "Conda: Activate Environment", "command": "activate_conda_environment" },
     { "caption": "Conda: Deactivate Environment", "command": "deactivate_conda_environment" },
+    { "caption": "Conda: Open REPL", "command": "open_conda_repl" },
     { "caption": "Conda: List Packages", "command": "list_conda_package" },
     { "caption": "Conda: Install Package", "command": "install_conda_package" },
     { "caption": "Conda: Remove Package", "command": "remove_conda_package" },
