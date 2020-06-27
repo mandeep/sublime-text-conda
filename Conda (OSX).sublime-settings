@@ -10,7 +10,7 @@
 
     // System architecture for Python installation
     // options: 32 or 64 bit
-    "architecture": "32",
+    "architecture": "64",
 
     // configuration is the path to conda's configuration file
     "configuration": "~/.condarc"
