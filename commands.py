@@ -1,8 +1,11 @@
 import os
 import subprocess
 import sys
+import platform
 
 import json
+import requests
+import re
 
 import sublime
 import sublime_plugin
@@ -92,6 +95,25 @@ class CondaCommand(sublime_plugin.WindowCommand):
 class CreateCondaEnvironmentCommand(CondaCommand):
     """Contains the methods needed to create a conda environment."""
 
+    @property
+    def python_versions(self):
+        """Get list of python versions from online conda repo."""
+        shorthand = {'Windows': "win", 'Linux': "linux", 'Darwin': "osx"}
+        system = shorthand[platform.system()]
+
+        bit = self.settings.get("architecture")
+
+        url = "https://repo.anaconda.com/pkgs/main/"+system+"-"+bit+"/"
+        r = requests.get(url)
+
+        v_list = re.findall(r"(?:>python-)(\d{1,2}.\d{1,2}.\d{1,2})[^<]+", r.text)
+
+        versions = set()
+        for each in v_list:
+            versions.add("Python " + re.search(r"\d{1,2}.\d{1,2}.\d{1,2}", each).group())
+
+        return sorted(list(versions), reverse=True)
+
     def run(self):
         """Display 'Conda: Create' in Sublime Text's command palette.
 
@@ -111,21 +133,14 @@ class CreateCondaEnvironmentCommand(CondaCommand):
         """
         self.environment = environment
 
-        python_versions = ['Python 2.7', 'Python 3.5', 'Python 3.6', 'Python 3.7']
-
-        self.window.show_quick_panel(python_versions, self.create_environment)
+        self.window.show_quick_panel(self.python_versions, self.create_environment)
 
     def create_environment(self, index):
         """Create a conda environment in the envs directory."""
         if index != -1:
-            if index == 0:
-                python_version = 'python=2.7'
-            elif index == 1:
-                python_version = 'python=3.5'
-            elif index == 2:
-                python_version = 'python=3.6'
-            else:
-                python_version = 'python=3.7'
+            selection = self.python_versions[index]
+
+            python_version = 'python='+selection[7:]
 
             cmd = [self.executable, '-m', 'conda', 'create',
                    '--name', self.environment, python_version, '-y', '-q']
