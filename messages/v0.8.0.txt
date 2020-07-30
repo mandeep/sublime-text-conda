@@ -1,0 +1,5 @@
+Conda v0.8.0
+============
+
+-  Use Anaconda's repo list so that all Python versions are available when creating a new environment
+-  Add Conda: Open REPL command that opens the current Conda environment in a new REPL tab
