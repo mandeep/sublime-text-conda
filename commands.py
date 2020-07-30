@@ -247,7 +247,13 @@ class OpenCondaReplCommand(CondaCommand):
         When 'Conda: Open REPL' is clicked by the user, a new tab is opened with a REPL of the opened file in the current environment.
         """
         environment_path = self.project_data['conda_environment']
-        executable_path = "{}\\{}".format(os.path.expanduser(environment_path), "python")
+
+        if sys.platform == 'win32':
+            executable = 'python'
+        else:
+            executable = os.path.join('bin', 'python')
+
+        executable_path = os.path.join(os.path.expanduser(environment_path), executable)
         environment = self.retrieve_environment_name(environment_path)
 
         cmd_list = [executable_path,  '-u', '-i']
