@@ -249,7 +249,7 @@ class OpenCondaReplCommand(CondaCommand):
         environment_path = self.project_data['conda_environment']
 
         if sys.platform == 'win32':
-            executable = 'python'
+            executable = 'python.exe'
         else:
             executable = os.path.join('bin', 'python')
 
