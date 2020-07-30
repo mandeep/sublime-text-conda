@@ -253,6 +253,46 @@ class DeactivateCondaEnvironmentCommand(CondaCommand):
                 sublime.status_message('No active conda environment')
 
 
+class OpenCondaReplCommand(CondaCommand):
+    """Open a REPL tab within the activated Conda environment."""
+
+    def run(self, open_file='$file'):
+        """Display 'Conda: Open REPL' in Sublime Text's command palette.
+
+        When 'Conda: Open REPL' is clicked by the user, a new tab is opened with a REPL of the opened file in the current environment.
+        """
+        environment_path = self.project_data['conda_environment']
+
+        if sys.platform == 'win32':
+            executable = 'python.exe'
+        else:
+            executable = os.path.join('bin', 'python')
+
+        executable_path = os.path.join(os.path.expanduser(environment_path), executable)
+        environment = self.retrieve_environment_name(environment_path)
+
+        cmd_list = [executable_path,  '-u', '-i']
+
+        if open_file:
+            cmd_list.append(open_file)
+
+        self.repl_open(cmd_list, environment)
+
+    def repl_open(self, cmd_list, environment):
+        """Open a SublimeREPL using provided commands"""
+        self.window.run_command(
+            'repl_open', {
+                'encoding': 'utf8',
+                'type': 'subprocess',
+                'cmd': cmd_list,
+                'cwd': '$file_path',
+                'syntax': 'Packages/Python/Python.tmLanguage',
+                'view_id': '*REPL* [python]',
+                'external_id': environment,
+            }
+        )
+
+
 class ListCondaPackageCommand(CondaCommand):
     """Contains all of the methods needed to list all installed packages."""
 
