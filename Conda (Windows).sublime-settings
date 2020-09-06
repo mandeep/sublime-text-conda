@@ -15,6 +15,14 @@
     // configuration is the path to conda's configuration file
     "configuration": "~\\.condarc",
 
+    // open repl in second row tab below current file,
+    // closing any existing tabs in that area
+    // assumes files are kept in group 0 (typical)
+    "repl_nice_ui": true,
+
+    // save the current file (if dirty) when opening repl
+    "repl_save_dirty": true,
+
     // syntax highlighting for Open REPL command
     // commonly a choice between 'Text/Plain text' and 'Python/Python'
     "repl_syntax": "Packages/Text/Plain text.tmLanguage",
