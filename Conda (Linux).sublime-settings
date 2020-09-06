@@ -13,5 +13,9 @@
     "architecture": "64",
 
     // configuration is the path to conda's configuration file
-    "configuration": "~/.condarc"
+    "configuration": "~/.condarc",
+
+    // syntax highlighting for Open REPL command
+    // commonly a choice between 'Text/Plain text' and 'Python/Python'
+    "repl_syntax": "Packages/Text/Plain text.tmLanguage"
 }

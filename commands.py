@@ -286,7 +286,7 @@ class OpenCondaReplCommand(CondaCommand):
                 'type': 'subprocess',
                 'cmd': cmd_list,
                 'cwd': '$file_path',
-                'syntax': 'Packages/Python/Python.tmLanguage',
+                'syntax': self.settings.get('repl_syntax'),
                 'view_id': '*REPL* [python]',
                 'external_id': environment,
             }

@@ -15,6 +15,10 @@
     // configuration is the path to conda's configuration file
     "configuration": "~\\.condarc",
 
+    // syntax highlighting for Open REPL command
+    // commonly a choice between 'Text/Plain text' and 'Python/Python'
+    "repl_syntax": "Packages/Text/Plain text.tmLanguage",
+
     // when true, the scripts will be run through the shell
     // If your code has a GUI (e.g. a matplotlib plot),
     // this needs to be true, otherwise Windows suppresses it.
