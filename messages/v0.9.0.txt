@@ -1,0 +1,8 @@
+Conda v0.9.0
+============
+
+-  Added setting to save file prior to opening REPL
+-  Added setting to open REPL in bottom row of layout
+-  REPL syntax now defaults to Plain text but can be changed to Python
+
+Thanks to @gseastream for the contributions
