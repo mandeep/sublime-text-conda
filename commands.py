@@ -322,6 +322,7 @@ class OpenCondaReplCommand(CondaCommand):
             window_width, window_height = view.viewport_extent()
             new_top = layout_height - window_height
             view.set_viewport_position((0, max(new_top, 0)))
+            view.settings().set("conda_repl_new_row", True)
 
     def repl_open(self, cmd_list, environment, syntax=None):
         """Open a SublimeREPL using provided commands"""
@@ -339,6 +340,32 @@ class OpenCondaReplCommand(CondaCommand):
                 'external_id': environment,
             }
         )
+
+
+class REPLViewEventListener(sublime_plugin.ViewEventListener):
+    """Event to remove entire row when repl is last tab closed"""
+    @classmethod
+    def is_applicable(cls, settings):
+        # only activate close event for conda repls in new row
+        return settings.get("conda_repl_new_row", False)
+
+    def __init__(self, view):
+        self.window = view.window()
+        super().__init__(view)
+
+    def on_close(self):
+        if self.window is not None:
+            pythonInterpretersGroup = 1
+            views = self.window.views_in_group(pythonInterpretersGroup)
+            # only remove row when empty
+            if (self.window.num_groups() == 2) and len(views) == 0:
+                self.window.run_command(
+                    'set_layout',
+                    {"cols":[0.0, 1.0],
+                     "rows":[0.0, 1.0],
+                     "cells":[[0, 0, 1, 1]]
+                    }
+                )
 
 
 class ListCondaPackageCommand(CondaCommand):
