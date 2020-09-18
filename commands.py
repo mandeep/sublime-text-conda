@@ -259,38 +259,114 @@ class OpenCondaReplCommand(CondaCommand):
     def run(self, open_file='$file'):
         """Display 'Conda: Open REPL' in Sublime Text's command palette.
 
-        When 'Conda: Open REPL' is clicked by the user, a new tab is opened with a REPL of the opened file in the current environment.
+        When 'Conda: Open REPL' is clicked by the user, a new tab is opened
+        with a REPL of the opened file in the current environment.
         """
-        environment_path = self.project_data['conda_environment']
+        settings = self.settings
+        repl_open_row = settings.get('repl_open_row')
+        repl_save_dirty = open_file and settings.get('repl_save_dirty')
+        repl_syntax = settings.get('repl_syntax')
 
+        if repl_open_row:
+            # set layout to 2 rows
+            if (self.window.num_groups() != 2):
+                self.window.run_command(
+                    'set_layout', {
+                        'cols':[0.0, 1.0],
+                        'rows':[0.0, 0.5, 1.0],
+                        'cells':[[0, 0, 1, 1], [0, 1, 1, 2]]
+                    }
+                )
+
+            # return focus to file
+            pythonEditorsGroup = 0
+            self.window.focus_group(pythonEditorsGroup)
+
+            # close old Python interpreters, if any
+            pythonInterpretersGroup = 1
+            for view in self.window.views_in_group(pythonInterpretersGroup):
+                view.close()
+
+        if repl_save_dirty:
+            # save file (if necessary) in current view
+            view = self.window.active_view()
+            if view.is_dirty():
+                view.run_command('save')
+
+        # build the command list
         if sys.platform == 'win32':
             executable = 'python.exe'
         else:
             executable = os.path.join('bin', 'python')
 
+        environment_path = self.project_data['conda_environment']
         executable_path = os.path.join(os.path.expanduser(environment_path), executable)
         environment = self.retrieve_environment_name(environment_path)
-
         cmd_list = [executable_path,  '-u', '-i']
 
         if open_file:
             cmd_list.append(open_file)
 
-        self.repl_open(cmd_list, environment)
+        # open the repl
+        self.repl_open(cmd_list, environment, repl_syntax)
 
-    def repl_open(self, cmd_list, environment):
+        if repl_open_row:
+            # move the interpreter into group 1, with focus
+            self.window.run_command(
+                'move_to_group', {'group': pythonInterpretersGroup}
+            )
+
+            # set view to top of repl window in case anything is printed above
+            view = self.window.active_view()
+            layout_width, layout_height = view.layout_extent()
+            window_width, window_height = view.viewport_extent()
+            new_top = layout_height - window_height
+            view.set_viewport_position((0, max(new_top, 0)))
+            view.settings().set("conda_repl_new_row", True)
+
+    def repl_open(self, cmd_list, environment, syntax=None):
         """Open a SublimeREPL using provided commands"""
+        if syntax is None:
+            syntax = self.settings.get('repl_syntax')
+
         self.window.run_command(
             'repl_open', {
                 'encoding': 'utf8',
                 'type': 'subprocess',
                 'cmd': cmd_list,
                 'cwd': '$file_path',
-                'syntax': 'Packages/Python/Python.tmLanguage',
+                'syntax': syntax,
                 'view_id': '*REPL* [python]',
                 'external_id': environment,
             }
         )
+
+
+class REPLViewEventListener(sublime_plugin.ViewEventListener):
+    """Event to remove entire row when repl is last tab closed"""
+    @classmethod
+    def is_applicable(cls, settings):
+        # only activate close event for conda repls in new row
+        return settings.get("conda_repl_new_row", False)
+
+    def __init__(self, view):
+        # need to capture window during construction
+        self.window = view.window()
+        super().__init__(view)
+
+    def on_close(self):
+        if self.window is not None:
+            pythonInterpretersGroup = 1
+            views = self.window.views_in_group(pythonInterpretersGroup)
+            # only remove row when empty
+            if (self.window.num_groups() == 2) and len(views) == 0:
+                self.window.run_command(
+                    'set_layout', {
+                        'cols':[0.0, 1.0],
+                        'rows':[0.0, 1.0],
+                        'cells':[[0, 0, 1, 1]]
+                    }
+                )
 
 
 class ListCondaPackageCommand(CondaCommand):

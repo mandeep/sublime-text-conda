@@ -36,7 +36,7 @@ working on projects that require a GUI to open (such as showing a matplotlib plo
 Usage
 =====
 
-Once installed, a ``Conda`` build system will appear in the build sytem menu and conda's commands will be located inside the command palette. The ``Conda`` build system must be selected in order to use the commands. These commands include ``Create Environment``, ``Remove Environment``, ``List Environments``, ``Activate Environment``, ``Deactivate Environment``, ``Install Package``, ``Remove Package``, ``List Packages``, ``Add Channel Source``, ``Remove Channel Source``, and ``List Channel Sources``.
+Once installed, a ``Conda`` build system will appear in the build sytem menu and conda's commands will be located inside the command palette. The ``Conda`` build system must be selected in order to use the commands. These commands include ``Create Environment``, ``Remove Environment``, ``List Environments``, ``Activate Environment``, ``Deactivate Environment`` ``Open REPL``, ``Install Package``, ``Remove Package``, ``List Packages``, ``Add Channel Source``, ``Remove Channel Source``, and ``List Channel Sources``. Command names for key bindings can be found `here <Default.sublime-commands>`_.
 
 **Conda: Create Environment**
 
@@ -67,6 +67,12 @@ activated. The selected conda environment will then be used in the build system.
 When selected from the command palette, `Conda: Dectivate Environment` will
 display in the command palette the current active environment. When the environment
 is selected, the build system will revert back to the Python that is located on PATH.
+
+**Conda: Open REPL**
+
+When selected from the command palette, `Conda: Open REPL` will
+open a REPL tab with the currently opened file within the activated Conda
+environment.
 
 **Conda: Install Package**
 
