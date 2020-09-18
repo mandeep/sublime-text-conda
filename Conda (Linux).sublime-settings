@@ -18,7 +18,7 @@
     // open repl in second row tab below current file,
     // closing any existing tabs in that area
     // assumes files are kept in group 0 (typical)
-    "repl_nice_ui": true,
+    "repl_open_row": true,
 
     // save the current file (if dirty) when opening repl
     "repl_save_dirty": true,

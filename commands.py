@@ -263,11 +263,11 @@ class OpenCondaReplCommand(CondaCommand):
         with a REPL of the opened file in the current environment.
         """
         settings = self.settings
-        repl_nice_ui = settings.get('repl_nice_ui')
+        repl_open_row = settings.get('repl_open_row')
         repl_save_dirty = open_file and settings.get('repl_save_dirty')
         repl_syntax = settings.get('repl_syntax')
 
-        if repl_nice_ui:
+        if repl_open_row:
             # set layout to 2 rows
             if (self.window.num_groups() != 2):
                 self.window.run_command(
@@ -310,7 +310,7 @@ class OpenCondaReplCommand(CondaCommand):
         # open the repl
         self.repl_open(cmd_list, environment, repl_syntax)
 
-        if repl_nice_ui:
+        if repl_open_row:
             # move the interpreter into group 1, with focus
             self.window.run_command(
                 'move_to_group', {'group': pythonInterpretersGroup}
