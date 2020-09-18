@@ -350,6 +350,7 @@ class REPLViewEventListener(sublime_plugin.ViewEventListener):
         return settings.get("conda_repl_new_row", False)
 
     def __init__(self, view):
+        # need to capture window during construction
         self.window = view.window()
         super().__init__(view)
 
@@ -360,10 +361,10 @@ class REPLViewEventListener(sublime_plugin.ViewEventListener):
             # only remove row when empty
             if (self.window.num_groups() == 2) and len(views) == 0:
                 self.window.run_command(
-                    'set_layout',
-                    {"cols":[0.0, 1.0],
-                     "rows":[0.0, 1.0],
-                     "cells":[[0, 0, 1, 1]]
+                    'set_layout', {
+                        'cols':[0.0, 1.0],
+                        'rows':[0.0, 1.0],
+                        'cells':[[0, 0, 1, 1]]
                     }
                 )
 
