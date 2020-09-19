@@ -355,18 +355,17 @@ class REPLViewEventListener(sublime_plugin.ViewEventListener):
         super().__init__(view)
 
     def on_close(self):
-        if self.window is not None:
-            pythonInterpretersGroup = 1
-            views = self.window.views_in_group(pythonInterpretersGroup)
-            # only remove row when empty
-            if (self.window.num_groups() == 2) and len(views) == 0:
-                self.window.run_command(
-                    'set_layout', {
-                        'cols':[0.0, 1.0],
-                        'rows':[0.0, 1.0],
-                        'cells':[[0, 0, 1, 1]]
-                    }
-                )
+        pythonInterpretersGroup = 1
+        views = self.window.views_in_group(pythonInterpretersGroup)
+        # only remove row when empty
+        if (self.window.num_groups() == 2) and len(views) == 0:
+            self.window.run_command(
+                'set_layout', {
+                    'cols':[0.0, 1.0],
+                    'rows':[0.0, 1.0],
+                    'cells':[[0, 0, 1, 1]]
+                }
+            )
 
 
 class ListCondaPackageCommand(CondaCommand):
