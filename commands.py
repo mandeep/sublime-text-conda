@@ -346,17 +346,20 @@ class REPLViewEventListener(sublime_plugin.ViewEventListener):
     """Event to remove entire row when repl is last tab closed"""
     @classmethod
     def is_applicable(cls, settings):
-        # only activate close event for conda repls in new row
+        """Only activate close event for conda repls in new row"""
         return settings.get("conda_repl_new_row", False)
 
     def __init__(self, view):
-        # need to grab window since it is None during on_close
+        """Grab window since it is None during on_close"""
         self.window = view.window()
         super().__init__(view)
 
     def on_pre_close(self):
-        # determine if we should remove the row:
-        # number groups unchanged, view in group, and group empty
+        """Determine if row should be removed:
+            - number groups unchanged
+            - view in group
+            - group empty
+        """
         window, view = self.window, self.view
         repl_group = 1
         self.remove_row = (
@@ -366,6 +369,7 @@ class REPLViewEventListener(sublime_plugin.ViewEventListener):
         )
 
     def on_close(self):
+        """Remove row if conditions are met"""
         if self.remove_row:
             self.window.run_command(
                 'set_layout',
