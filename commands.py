@@ -282,11 +282,13 @@ class OpenCondaReplCommand(CondaCommand):
             editor_group = 0
             self.window.focus_group(editor_group)
 
-            # close old Python interpreters, if any
+            # close old repls, if any
             repl_group = 1
+            index = None # grab index of first repl, if one exists
             for view in self.window.views_in_group(repl_group):
                 settings = view.settings()
                 if settings.get("conda_repl_new_row", False):
+                    index = index or self.window.get_view_index(view)
                     # make sure close event does not mess with layout
                     settings.set("conda_repl_new_row", False)
                     view.close()
@@ -318,13 +320,18 @@ class OpenCondaReplCommand(CondaCommand):
         self.repl_open(cmd_list, environment, repl_syntax)
 
         if repl_open_row:
-            # move the interpreter into group 1, with focus
+            # move the repl into group, with focus
             self.window.run_command(
                 'move_to_group', {'group': repl_group}
             )
 
-            # set view to top of repl window in case anything is printed above
             view = self.window.active_view()
+
+            # put repl in same spot as old repl if one existed
+            if index is not None:
+                self.window.set_view_index(view, *index)
+
+            # set view to top of repl window in case anything is printed above
             layout_width, layout_height = view.layout_extent()
             window_width, window_height = view.viewport_extent()
             new_top = layout_height - window_height
