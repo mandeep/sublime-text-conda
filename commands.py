@@ -285,6 +285,8 @@ class OpenCondaReplCommand(CondaCommand):
             # close old Python interpreters, if any
             repl_group = 1
             for view in self.window.views_in_group(repl_group):
+                # make sure close event does not mess with layout
+                view.settings().set("conda_repl_new_row", False)
                 view.close()
 
         if repl_save_dirty:
@@ -372,10 +374,10 @@ class REPLViewEventListener(sublime_plugin.ViewEventListener):
         """Remove row if conditions are met"""
         if self.remove_row:
             self.window.run_command(
-                'set_layout',
-                {"cols":[0.0, 1.0],
-                 "rows":[0.0, 1.0],
-                 "cells":[[0, 0, 1, 1]]
+                'set_layout', {
+                    'cols':[0.0, 1.0],
+                    'rows':[0.0, 1.0],
+                    'cells':[[0, 0, 1, 1]]
                 }
             )
 
