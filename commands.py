@@ -279,12 +279,12 @@ class OpenCondaReplCommand(CondaCommand):
                 )
 
             # return focus to file
-            pythonEditorsGroup = 0
-            self.window.focus_group(pythonEditorsGroup)
+            editor_group = 0
+            self.window.focus_group(editor_group)
 
             # close old Python interpreters, if any
-            pythonInterpretersGroup = 1
-            for view in self.window.views_in_group(pythonInterpretersGroup):
+            repl_group = 1
+            for view in self.window.views_in_group(repl_group):
                 view.close()
 
         if repl_save_dirty:
@@ -313,7 +313,7 @@ class OpenCondaReplCommand(CondaCommand):
         if repl_open_row:
             # move the interpreter into group 1, with focus
             self.window.run_command(
-                'move_to_group', {'group': pythonInterpretersGroup}
+                'move_to_group', {'group': repl_group}
             )
 
             # set view to top of repl window in case anything is printed above
@@ -350,20 +350,28 @@ class REPLViewEventListener(sublime_plugin.ViewEventListener):
         return settings.get("conda_repl_new_row", False)
 
     def __init__(self, view):
-        # need to capture window during construction
+        # need to grab window since it is None during on_close
         self.window = view.window()
         super().__init__(view)
 
+    def on_pre_close(self):
+        # determine if we should remove the row:
+        # number groups unchanged, view in group, and group empty
+        window, view = self.window, self.view
+        repl_group = 1
+        self.remove_row = (
+            window.num_groups() == 2 and
+            window.get_view_index(view)[0] == repl_group and
+            len(window.sheets_in_group(repl_group)) == 1
+        )
+
     def on_close(self):
-        pythonInterpretersGroup = 1
-        views = self.window.views_in_group(pythonInterpretersGroup)
-        # only remove row when empty
-        if (self.window.num_groups() == 2) and len(views) == 0:
+        if self.remove_row:
             self.window.run_command(
-                'set_layout', {
-                    'cols':[0.0, 1.0],
-                    'rows':[0.0, 1.0],
-                    'cells':[[0, 0, 1, 1]]
+                'set_layout',
+                {"cols":[0.0, 1.0],
+                 "rows":[0.0, 1.0],
+                 "cells":[[0, 0, 1, 1]]
                 }
             )
 
