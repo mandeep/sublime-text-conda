@@ -285,9 +285,14 @@ class OpenCondaReplCommand(CondaCommand):
             # close old Python interpreters, if any
             repl_group = 1
             for view in self.window.views_in_group(repl_group):
-                # make sure close event does not mess with layout
-                view.settings().set("conda_repl_new_row", False)
-                view.close()
+                settings = view.settings()
+                if settings.get("conda_repl_new_row", False):
+                    # make sure close event does not mess with layout
+                    settings.set("conda_repl_new_row", False)
+                    view.close()
+                    # if there's another tab in that group, it will focus
+                    # there after closing, so return focus to main file
+                    self.window.focus_group(editor_group)
 
         if repl_save_dirty:
             # save file (if necessary) in current view
