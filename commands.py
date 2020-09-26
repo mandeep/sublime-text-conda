@@ -347,13 +347,14 @@ class OpenCondaReplCommand(CondaCommand):
         if syntax is None:
             syntax = self.settings.get('repl_syntax')
 
-        syntaxpath = "Packages/%s.tmLanguage"
+        syntaxname = "Python/Python" # meaningful fallback
         if syntax == "python":
-            syntaxpath = syntaxpath % "Python/Python"
+            syntaxname = "Python/Python"
         elif syntax == "plaintext":
-            syntaxpath = syntaxpath % "Text/Plain text"
+            syntaxname = "Text/Plain text"
         else:
-            raise ValueError("Unrecognized syntax setting '%s'" % (syntax,))
+            print("Conda Open REPL: Unrecognized syntax '{}'".format(syntax))
+        syntaxpath = "Packages/{}.tmLanguage".format(syntaxname)
 
         self.window.run_command(
             'repl_open', {
