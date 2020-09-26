@@ -264,6 +264,7 @@ class OpenCondaReplCommand(CondaCommand):
         """
         settings = self.settings
         repl_open_row = settings.get('repl_open_row')
+        repl_row_close_existing = settings.get('repl_row_close_existing')
         repl_save_dirty = open_file and settings.get('repl_save_dirty')
         repl_syntax = settings.get('repl_syntax')
 
@@ -282,19 +283,22 @@ class OpenCondaReplCommand(CondaCommand):
             editor_group = 0
             self.window.focus_group(editor_group)
 
-            # close old repls, if any
             repl_group = 1
-            index = None # grab index of first repl, if one exists
-            for view in self.window.views_in_group(repl_group):
-                settings = view.settings()
-                if settings.get("conda_repl_new_row", False):
-                    index = index or self.window.get_view_index(view)
-                    # make sure close event does not mess with layout
-                    settings.set("conda_repl_new_row", False)
-                    view.close()
-                    # if there's another tab in that group, it will focus
-                    # there after closing, so return focus to main file
-                    self.window.focus_group(editor_group)
+            index = None
+
+            if repl_row_close_existing:
+                # close old repls, if any
+                for view in self.window.views_in_group(repl_group):
+                    settings = view.settings()
+                    if settings.get("conda_repl_new_row", False):
+                        # grab index of first repl, if one exists
+                        index = index or self.window.get_view_index(view)
+                        # make sure close event does not mess with layout
+                        settings.set("conda_repl_new_row", False)
+                        view.close()
+                        # if there's another tab in that group, it will focus
+                        # there after closing, so return focus to main file
+                        self.window.focus_group(editor_group)
 
         if repl_save_dirty:
             # save file (if necessary) in current view

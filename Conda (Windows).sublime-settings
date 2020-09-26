@@ -20,6 +20,10 @@
     // assumes files are kept in group 0 (typical)
     "repl_open_row": false,
 
+    // when opening a repl using repl_open_row, close any
+    // existing conda repls in the second row first
+    "repl_row_close_existing": false,
+
     // save the current file (if dirty) when opening repl
     "repl_save_dirty": true,
 
