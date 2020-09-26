@@ -343,13 +343,21 @@ class OpenCondaReplCommand(CondaCommand):
         if syntax is None:
             syntax = self.settings.get('repl_syntax')
 
+        syntaxpath = "Packages/%s.tmLanguage"
+        if syntax == "python":
+            syntaxpath = syntaxpath % "Python/Python"
+        elif syntax == "plaintext":
+            syntaxpath = syntaxpath % "Text/Plain text"
+        else:
+            raise ValueError("Unrecognized syntax setting '%s'" % (syntax,))
+
         self.window.run_command(
             'repl_open', {
                 'encoding': 'utf8',
                 'type': 'subprocess',
                 'cmd': cmd_list,
                 'cwd': '$file_path',
-                'syntax': syntax,
+                'syntax': syntaxpath,
                 'view_id': '*REPL* [python]',
                 'external_id': environment,
             }

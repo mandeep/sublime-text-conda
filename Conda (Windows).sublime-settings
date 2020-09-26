@@ -24,8 +24,8 @@
     "repl_save_dirty": true,
 
     // syntax highlighting for Open REPL command
-    // commonly a choice between 'Text/Plain text' and 'Python/Python'
-    "repl_syntax": "Packages/Text/Plain text.tmLanguage",
+    // choice between 'python' and 'plaintext'
+    "repl_syntax": "python",
 
     // when true, the scripts will be run through the shell
     // If your code has a GUI (e.g. a matplotlib plot),
