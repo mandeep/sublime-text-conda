@@ -264,6 +264,7 @@ class OpenCondaReplCommand(CondaCommand):
         """
         settings = self.settings
         repl_open_row = settings.get('repl_open_row')
+        repl_row_close_existing = settings.get('repl_row_close_existing')
         repl_save_dirty = open_file and settings.get('repl_save_dirty')
         repl_syntax = settings.get('repl_syntax')
 
@@ -279,13 +280,25 @@ class OpenCondaReplCommand(CondaCommand):
                 )
 
             # return focus to file
-            pythonEditorsGroup = 0
-            self.window.focus_group(pythonEditorsGroup)
+            editor_group = 0
+            self.window.focus_group(editor_group)
 
-            # close old Python interpreters, if any
-            pythonInterpretersGroup = 1
-            for view in self.window.views_in_group(pythonInterpretersGroup):
-                view.close()
+            repl_group = 1
+            index = None
+
+            if repl_row_close_existing:
+                # close old repls, if any
+                for view in self.window.views_in_group(repl_group):
+                    settings = view.settings()
+                    if settings.get("conda_repl_new_row", False):
+                        # grab index of first repl, if one exists
+                        index = index or self.window.get_view_index(view)
+                        # make sure close event does not mess with layout
+                        settings.set("conda_repl_new_row", False)
+                        view.close()
+                        # if there's another tab in that group, it will focus
+                        # there after closing, so return focus to main file
+                        self.window.focus_group(editor_group)
 
         if repl_save_dirty:
             # save file (if necessary) in current view
@@ -311,13 +324,18 @@ class OpenCondaReplCommand(CondaCommand):
         self.repl_open(cmd_list, environment, repl_syntax)
 
         if repl_open_row:
-            # move the interpreter into group 1, with focus
+            # move the repl into group, with focus
             self.window.run_command(
-                'move_to_group', {'group': pythonInterpretersGroup}
+                'move_to_group', {'group': repl_group}
             )
 
-            # set view to top of repl window in case anything is printed above
             view = self.window.active_view()
+
+            # put repl in same spot as old repl if one existed
+            if index is not None:
+                self.window.set_view_index(view, *index)
+
+            # set view to top of repl window in case anything is printed above
             layout_width, layout_height = view.layout_extent()
             window_width, window_height = view.viewport_extent()
             new_top = layout_height - window_height
@@ -329,13 +347,22 @@ class OpenCondaReplCommand(CondaCommand):
         if syntax is None:
             syntax = self.settings.get('repl_syntax')
 
+        syntaxname = "Python/Python" # meaningful fallback
+        if syntax == "python":
+            syntaxname = "Python/Python"
+        elif syntax == "plaintext":
+            syntaxname = "Text/Plain text"
+        else:
+            print("Conda Open REPL: Unrecognized syntax '{}'".format(syntax))
+        syntaxpath = "Packages/{}.tmLanguage".format(syntaxname)
+
         self.window.run_command(
             'repl_open', {
                 'encoding': 'utf8',
                 'type': 'subprocess',
                 'cmd': cmd_list,
                 'cwd': '$file_path',
-                'syntax': syntax,
+                'syntax': syntaxpath,
                 'view_id': '*REPL* [python]',
                 'external_id': environment,
             }
@@ -346,27 +373,38 @@ class REPLViewEventListener(sublime_plugin.ViewEventListener):
     """Event to remove entire row when repl is last tab closed"""
     @classmethod
     def is_applicable(cls, settings):
-        # only activate close event for conda repls in new row
+        """Only activate close event for conda repls in new row"""
         return settings.get("conda_repl_new_row", False)
 
     def __init__(self, view):
-        # need to capture window during construction
+        """Grab window since it is None during on_close"""
         self.window = view.window()
         super().__init__(view)
 
+    def on_pre_close(self):
+        """Determine if row should be removed:
+            - number groups unchanged
+            - view in group
+            - group empty
+        """
+        window, view = self.window, self.view
+        repl_group = 1
+        self.remove_row = (
+            window.num_groups() == 2 and
+            window.get_view_index(view)[0] == repl_group and
+            len(window.sheets_in_group(repl_group)) == 1
+        )
+
     def on_close(self):
-        if self.window is not None:
-            pythonInterpretersGroup = 1
-            views = self.window.views_in_group(pythonInterpretersGroup)
-            # only remove row when empty
-            if (self.window.num_groups() == 2) and len(views) == 0:
-                self.window.run_command(
-                    'set_layout', {
-                        'cols':[0.0, 1.0],
-                        'rows':[0.0, 1.0],
-                        'cells':[[0, 0, 1, 1]]
-                    }
-                )
+        """Remove row if conditions are met"""
+        if self.remove_row:
+            self.window.run_command(
+                'set_layout', {
+                    'cols':[0.0, 1.0],
+                    'rows':[0.0, 1.0],
+                    'cells':[[0, 0, 1, 1]]
+                }
+            )
 
 
 class ListCondaPackageCommand(CondaCommand):

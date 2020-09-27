@@ -15,18 +15,6 @@
     // configuration is the path to conda's configuration file
     "configuration": "~\\.condarc",
 
-    // open repl in second row tab below current file,
-    // closing any existing tabs in that area
-    // assumes files are kept in group 0 (typical)
-    "repl_open_row": false,
-
-    // save the current file (if dirty) when opening repl
-    "repl_save_dirty": true,
-
-    // syntax highlighting for Open REPL command
-    // commonly a choice between 'Text/Plain text' and 'Python/Python'
-    "repl_syntax": "Packages/Text/Plain text.tmLanguage",
-
     // when true, the scripts will be run through the shell
     // If your code has a GUI (e.g. a matplotlib plot),
     // this needs to be true, otherwise Windows suppresses it.
@@ -34,5 +22,21 @@
 
     // when true, the script execution will be handed over to
     // the pythonw executable, instead of python
-    "use_pythonw": false
+    "use_pythonw": false,
+
+    // open repl in second row tab below current file,
+    // closing any existing tabs in that area
+    // assumes files are kept in group 0 (typical)
+    "repl_open_row": false,
+
+    // when opening a repl using repl_open_row, close any
+    // existing conda repls in the second row first
+    "repl_row_close_existing": false,
+
+    // save the current file (if dirty) when opening repl
+    "repl_save_dirty": true,
+
+    // syntax highlighting for Open REPL command
+    // choice between 'python' and 'plaintext'
+    "repl_syntax": "python"
 }
