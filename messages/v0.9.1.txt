@@ -1,0 +1,7 @@
+Conda v0.9.1
+============
+
+-  Fix issue when closing the last REPL tab
+-  Default to Python syntax for REPL
+
+Thanks to @gseastream for the contributions
